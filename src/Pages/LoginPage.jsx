@@ -1,20 +1,17 @@
 import React from "react";
-import Breadcrumb from "../Components/BreadCrumbs/BreadCrumbs";
 import flagImage from "../flag.png"; // Ensure this path is correct
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 
 export const LoginPage = () => {
   return (
-    <>
-      <Breadcrumb />
-      <div
+    <div
         className="flex justify-center items-center p-4"
         style={{ minHeight: "50vh" }}
       >
         <div className="text-gray-600 text-xl">
           <div className="flex flex-col justify-center items-center text-[#636362]">
-            <div className="flex items-center mb-4">
+            <div className="flex items-center mb-10">
               <span className="text-bold text-[#FF0000] px-2">*</span>
               <p className="text-black text-lg">Enter Mobile Number</p>
             </div>
@@ -55,6 +52,5 @@ export const LoginPage = () => {
           </div>
         </div>
       </div>
-    </>
   );
 };
