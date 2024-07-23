@@ -8,12 +8,11 @@ export const Navigator = () => {
   const location = useLocation();
   const currentPath = location.pathname;
 
-  const isRefundRequest = currentPath === '/refund-request';
-  const isBankingInfo = currentPath === '/bank-info';
+  const isRefundRequest = currentPath.includes('/refund-request');
+  const isBankingInfo = currentPath.includes('/bank-info');
 
   return (
     <div className="flex flex-col md:flex-row justify-center items-center w-full md:w-1/2 mx-auto h-[14vh] bg-white my-10 px-4">
-      {/* Left Section */}
       <div
         className={`w-full md:w-2/5 flex items-center space-x-2 relative mb-4 md:mb-0 ${
           isBankingInfo ? 'text-gray-800' : 'text-gray-400'
@@ -41,7 +40,6 @@ export const Navigator = () => {
         </div>
       </div>
 
-      {/* Middle Section */}
       <div
         className={`w-full md:w-1/5 flex justify-center mb-4 md:mb-0 ${
           isRefundRequest ? 'border-gray-800' : 'border-gray-400'
@@ -49,7 +47,6 @@ export const Navigator = () => {
       >
       </div>
 
-      {/* Right Section */}
       <div
         className={`w-full md:w-2/5 flex items-center space-x-2 justify-end relative ${
           isRefundRequest ? 'text-gray-800' : 'text-gray-400'
