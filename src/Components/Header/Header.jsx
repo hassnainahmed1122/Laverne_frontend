@@ -1,11 +1,14 @@
 import React from 'react';
 import { RefundBasket } from '../RefundBasket/RefundBasket';
-
+import { useAuth } from '../../Context/AuthContext';
 export const Header = () => {
+  const { isAuthenticated } = useAuth();
   return (
     <div className="w-full h-[14vh] bg-white shadow-md px-20 flex items-center justify-between">
       <div className="flex items-center">
+      {isAuthenticated && (
         <RefundBasket />
+      )}
       </div>
       <div className="flex flex-col items-start space-y-2 font-dinnextltarabic p-4">
         <img

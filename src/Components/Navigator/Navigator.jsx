@@ -32,7 +32,7 @@ export const Navigator = () => {
           />
           <span
             className={`absolute top-0 right-[-4px] md:right-[-6px] transform translate-y-[-50%] inline-flex items-center justify-center w-5 h-5 md:w-6 md:h-6 text-xs font-bold ${
-              isBankingInfo ? 'text-gray-100 bg-gray-600' : 'text-red-100 bg-gray-600'
+              isBankingInfo ? 'text-gray-100 bg-green-700' : 'text-red-100 bg-gray-600'
             } rounded-full`}
           >
             0
@@ -66,7 +66,7 @@ export const Navigator = () => {
           />
           <div
             className={`absolute top-0 right-[-4px] md:right-[-6px] transform translate-y-[-50%] p-1 ${
-              isRefundRequest ? 'bg-green-700' : 'bg-green-500'
+              isRefundRequest ? 'bg-green-700' : 'bg-gray-700'
             } rounded-full`}
           >
             <FaCheck className="text-white" size={12} />
