@@ -2,13 +2,20 @@ import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { FaChevronDown } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const ibanValidationSchema = Yup.string()
     .matches(
         /^SA\d{22}$/,
         "Invalid IBAN format. Must be 24 characters starting with 'SA'."
     )
-    .required("IBAN is required");
+    .required("IBAN is required")
+    .test(
+        "remove-spaces",
+        "IBAN must not contain spaces",
+        (value) => !/\s/.test(value)
+    )
+    .transform(value => value.replace(/\s+/g, ''));
 
 const bankNameMapping = {
     80: "RJHI",
@@ -22,6 +29,7 @@ const bankNameMapping = {
     30: "ARNB",
     60: "BJAZ",
 };
+
 
 const cities = {
     AbaAlworood: "Aba Alworood",
@@ -321,6 +329,7 @@ const getBankName = (iban) => {
 };
 
 export const RefundForm = () => {
+    const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
             firstName: "",
@@ -346,6 +355,7 @@ export const RefundForm = () => {
         }),
         onSubmit: (values) => {
             console.log("Form values:", values);
+            navigate("/bank-info/confirmation");
         },
     });
 

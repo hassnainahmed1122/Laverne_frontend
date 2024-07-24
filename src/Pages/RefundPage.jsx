@@ -1,11 +1,13 @@
-import { Navigator } from "../Components/Navigator/Navigator"
-import { RequestCard } from "../Components/RequestCard/RequestCard"
+import { Navigator } from "../Components/Navigator/Navigator";
+import { RequestCard } from "../Components/RequestCard/RequestCard";
 
 export const RefundPage = (props) => {
+
     return (
         <>
             <Navigator />
-            <RequestCard />          
+            <RequestCard status={"underRevision"} />
+            <RequestCard status={"test"}/>         
         </>
-    )
-}
+    );
+};

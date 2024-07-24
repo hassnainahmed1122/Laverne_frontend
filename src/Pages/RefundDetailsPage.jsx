@@ -9,8 +9,6 @@ export const RefundDetailsPage = (props) => {
     <>
       <Navigator />
       <ProductCard />
-      <ProductCard />
-      <ProductCard />
       <ButtonNavigator />
     </>
   );

@@ -37,7 +37,7 @@ export const OtpPage = () => {
           <div className="flex flex-col justify-center items-center text-[#636362]">
             <div className="flex items-center mb-10">
               <span className="text-bold text-[#FF0000] px-2">*</span>
-              <p className="text-black text-lg">{t('verificationCode')}</p> {/* Use t here */}
+              <p className="text-black text-lg">{t('verificationCode')}</p>
             </div>
             <form onSubmit={formik.handleSubmit} className="max-w-sm mx-auto">
               <div className="flex items-center mb-4">
@@ -48,7 +48,7 @@ export const OtpPage = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   className="py-2.5 px-4 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-e-lg focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-700"
-                  placeholder={t('enterVerificationCode')} // Use t here
+                  placeholder={t('enterVerificationCode')}
                   style={{ height: "50px", width: "100%" }}
                 />
               </div>
@@ -62,7 +62,7 @@ export const OtpPage = () => {
                 className="w-full py-2 bg-black text-white rounded-md hover:cursor-pointer"
               >
                 <div className="flex items-center justify-center">
-                  <span>{t('access')}</span> {/* Use t here */}
+                  <span>{t('access')}</span>
                   <MdOutlineKeyboardArrowLeft />
                 </div>
               </button>

@@ -1,19 +1,29 @@
 import React, { useState } from 'react';
 import { IoIosArrowBack, IoIosClose } from 'react-icons/io';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
-export const RequestCard = () => {
+export const RequestCard = ({ status }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const handleClick = () => {
+    if (status === 'underRevision') {
+      openModal();
+    } else {
+      navigate('/product-list/details');
+    }
+  };
+
   return (
     <>
       <div 
-        onClick={openModal} 
-        className="flex justify-center items-center cursor-pointer"
+        onClick={handleClick} 
+        className="flex justify-center items-center cursor-pointer mt-2"
       >
         <div className="bg-white shadow-lg rounded-lg md:w-1/2">
           <div className="border-b border-gray-300 p-4 flex items-center justify-end space-x-2">

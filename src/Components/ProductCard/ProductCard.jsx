@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../Context/AuthContext';
 
 export const ProductCard = () => {
-  const [quantity, setQuantity] = useState(0);
+  const { quantity, price, increaseQuantity, decreaseQuantity, increasePrice, decreasePrice } = useAuth();
   const { t } = useTranslation();
 
   const handleDecrease = () => {
-    setQuantity((prev) => Math.max(prev - 1, 0)); 
+    decreasePrice(100)
+    decreaseQuantity(1) 
   };
 
   const handleIncrease = () => {
-    setQuantity((prev) => prev + 1);
+    increaseQuantity(1)
+    increasePrice(100)
   };
 
   return (
@@ -19,7 +22,7 @@ export const ProductCard = () => {
         <div className="flex justify-end items-start mb-2 space-x-2">
           <div className="flex flex-col space-y-1 text-right">
             <h2 className="text-lg font-semibold text-gray-800">{t('productName')}</h2>
-            <span className="text-gray-600">{t('price')}</span>
+            <span className="text-gray-600">{t('price', {price: price})}</span>
           </div>
           <img
             src="https://via.placeholder.com/150"

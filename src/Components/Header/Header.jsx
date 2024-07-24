@@ -1,16 +1,18 @@
 import React from 'react';
 import { RefundBasket } from '../RefundBasket/RefundBasket';
-import { useAuth } from '../../Context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 
 export const Header = () => {
-  const { isAuthenticated } = useAuth();
   const { t } = useTranslation();
+  const location = useLocation();
+
+  const showRefundBasket = /login|otp|order-number/.test(location.pathname);
 
   return (
     <div className="w-full h-[14vh] bg-white shadow-md px-20 flex items-center justify-between">
       <div className="flex items-center">
-        {isAuthenticated && (
+        {!showRefundBasket && (
           <RefundBasket />
         )}
       </div>

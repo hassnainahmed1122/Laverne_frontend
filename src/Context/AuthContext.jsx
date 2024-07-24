@@ -5,6 +5,8 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [quantity, setQuantity] = useState(0);
+  const [price, setPrice] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,6 +17,22 @@ export const AuthProvider = ({ children }) => {
 
     checkAuth();
   }, []);
+
+  const increaseQuantity = (value) => {
+    setQuantity(prevQuantity => prevQuantity + value);
+  };
+
+  const decreaseQuantity = (value) => {
+    setQuantity(prevQuantity => Math.max(prevQuantity - value, 0));
+  };
+
+  const increasePrice = (value) => {
+    setPrice(prevPrice => prevPrice + value);
+  };
+
+  const decreasePrice = (value) => {
+    setPrice(prevPrice => Math.max(prevPrice - value, 0));
+  };
 
   const login = () => {
     localStorage.setItem("token", "fake-token");
@@ -29,7 +47,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, quantity, price, increaseQuantity, decreaseQuantity, increasePrice, decreasePrice }}>
       {children}
     </AuthContext.Provider>
   );
