@@ -14,11 +14,11 @@ export const Header = () => {
           <RefundBasket />
         )}
       </div>
-      <div className="flex flex-col items-start space-y-2 font-dinnextltarabic p-4">
+      <div className="flex flex-col items-center space-y-2 font-dinnextltarabic p-4">
         <img
           src="https://cdn.salla.sa/XzOPD/EJ37QZ2evPx7y7561LXSZknDyIn19pZFzaaZ5LXh.jpg"
           alt="logo"
-          className="w-auto h-10 md:h-12 lg:h-14"
+          className="w-auto sm:h-14 md:h-20"
         />
         <div className="text-md text-[#636362] font-semibold tracking-normal">
           {t('productReturnPlatform')}
