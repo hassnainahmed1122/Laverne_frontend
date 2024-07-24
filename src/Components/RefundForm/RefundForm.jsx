@@ -437,7 +437,7 @@ export const RefundForm = () => {
                             placeholder="Email"
                         />
                         {formik.touched.email && formik.errors.email ? (
-                            <div className="text-red-500 text-sm mt-1">
+                            <div className="text-red-500 text-sm mt-1 text-right">
                                 {formik.errors.email}
                             </div>
                         ) : null}
@@ -462,7 +462,7 @@ export const RefundForm = () => {
                                 <FaChevronDown className="text-gray-400" />
                             </div>
                             {formik.touched.productOpened && formik.errors.productOpened ? (
-                                <div className="text-red-500 text-sm mt-1">
+                                <div className="text-red-500 text-sm mt-1 text-right">
                                     {formik.errors.productOpened}
                                 </div>
                             ) : null}
@@ -489,7 +489,7 @@ export const RefundForm = () => {
                                 <FaChevronDown className="text-gray-400" />
                             </div>
                             {formik.touched.reason && formik.errors.reason ? (
-                                <div className="text-red-500 text-sm mt-1">
+                                <div className="text-red-500 text-sm mt-1 text-right">
                                     {formik.errors.reason}
                                 </div>
                             ) : null}
@@ -516,7 +516,7 @@ export const RefundForm = () => {
                                 <FaChevronDown className="text-gray-400" />
                             </div>
                             {formik.touched.city && formik.errors.city ? (
-                                <div className="text-red-500 text-sm mt-1">
+                                <div className="text-red-500 text-sm mt-1 text-right">
                                     {formik.errors.city}
                                 </div>
                             ) : null}

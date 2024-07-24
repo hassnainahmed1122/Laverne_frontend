@@ -1,14 +1,18 @@
 import React from 'react';
 import { RefundBasket } from '../RefundBasket/RefundBasket';
 import { useAuth } from '../../Context/AuthContext';
+import { useTranslation } from 'react-i18next';
+
 export const Header = () => {
   const { isAuthenticated } = useAuth();
+  const { t } = useTranslation();
+
   return (
     <div className="w-full h-[14vh] bg-white shadow-md px-20 flex items-center justify-between">
       <div className="flex items-center">
-      {isAuthenticated && (
-        <RefundBasket />
-      )}
+        {isAuthenticated && (
+          <RefundBasket />
+        )}
       </div>
       <div className="flex flex-col items-start space-y-2 font-dinnextltarabic p-4">
         <img
@@ -17,10 +21,9 @@ export const Header = () => {
           className="w-auto h-10 md:h-12 lg:h-14"
         />
         <div className="text-md text-[#636362] font-semibold tracking-normal">
-          Laverne Product Return Platform
+          {t('productReturnPlatform')}
         </div>
       </div>
     </div>
   );
 };
-

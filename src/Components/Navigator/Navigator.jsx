@@ -3,12 +3,14 @@ import { IoWalletOutline } from 'react-icons/io5';
 import { TiShoppingCart } from 'react-icons/ti';
 import { FaCheck } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export const Navigator = () => {
   const location = useLocation();
   const currentPath = location.pathname;
+  const { t } = useTranslation();
 
-  const isRefundRequest = currentPath.includes('/refund-request');
+  const isRefundRequest = currentPath.includes('/product-list');
   const isBankingInfo = currentPath.includes('/bank-info');
 
   return (
@@ -23,7 +25,7 @@ export const Navigator = () => {
             isBankingInfo ? 'text-gray-800' : 'text-gray-400'
           }`}
         >
-          Banking Data
+          {t('bankingData')} 
         </span>
         <div className="relative">
           <IoWalletOutline
@@ -57,7 +59,7 @@ export const Navigator = () => {
             isRefundRequest ? 'text-gray-800' : 'text-gray-400'
           }`}
         >
-          Refund Basket
+          {t('refundBasket')} 
         </span>
         <div className="relative">
           <TiShoppingCart
@@ -76,4 +78,3 @@ export const Navigator = () => {
     </div>
   );
 };
-

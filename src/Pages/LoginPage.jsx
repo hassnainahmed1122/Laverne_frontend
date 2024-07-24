@@ -1,17 +1,20 @@
-import React from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import flagImage from "../flag.png";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
-
-const validationSchema = Yup.object({
-  mobileNumber: Yup.string()
-    .matches(/^\d{9}$/, "Invalid mobile number. Must be exactly 9 digits.")
-    .required("Mobile number is required")
-});
+import React from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import flagImage from '../flag.png';
+import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowLeft } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
+import i18n from '../Langauge/i18n';
 
 export const LoginPage = () => {
+  const navigate = useNavigate();
+
+  const validationSchema = Yup.object({
+    mobileNumber: Yup.string()
+      .matches(/^\d{9}$/, i18n.t('invalidMobileNumber'))
+      .required(i18n.t('mobileNumberRequired'))
+  });
+
   const formik = useFormik({
     initialValues: {
       mobileNumber: ""
@@ -19,19 +22,17 @@ export const LoginPage = () => {
     validationSchema: validationSchema,
     onSubmit: values => {
       console.log("Submitted mobile number:", values.mobileNumber);
+      navigate('/otp');
     }
   });
 
   return (
-    <div
-      className="flex justify-center items-center p-4"
-      style={{ minHeight: "50vh" }}
-    >
+    <div className="flex justify-center items-center p-4" style={{ minHeight: "50vh" }}>
       <div className="text-gray-600 text-xl">
         <div className="flex flex-col justify-center items-center text-[#636362]">
           <div className="flex items-center mb-10">
             <span className="text-bold text-[#FF0000] px-2">*</span>
-            <p className="text-black text-lg">Enter Mobile Number</p>
+            <p className="text-black text-lg">{i18n.t('enterMobileNumber')}</p>
           </div>
           <form onSubmit={formik.handleSubmit} className="max-w-sm mx-auto">
             <div className="flex items-center mb-4">
@@ -43,11 +44,7 @@ export const LoginPage = () => {
               >
                 <MdOutlineKeyboardArrowDown />
                 <p className="px-2">+966</p>
-                <img
-                  src={flagImage}
-                  alt="flag"
-                  className="h-6 w-6 ml-2"
-                />
+                <img src={flagImage} alt="flag" className="h-6 w-6 ml-2" />
               </button>
               <input
                 type="text"
@@ -56,7 +53,7 @@ export const LoginPage = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 className="py-2.5 px-4 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-e-lg focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-700"
-                placeholder="Enter mobile number"
+                placeholder={i18n.t('enterMobileNumber')}
                 style={{ height: "50px", width: "200px" }}
               />
             </div>
@@ -70,7 +67,7 @@ export const LoginPage = () => {
               className="w-full py-2 bg-black text-white rounded-md hover:cursor-pointer"
             >
               <div className="flex items-center justify-center">
-                <span>Access</span>
+                <span>{i18n.t('access')}</span>
                 <MdOutlineKeyboardArrowLeft />
               </div>
             </button>

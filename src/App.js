@@ -22,8 +22,8 @@ function App(props) {
             <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/login" element={<LoginPage {...props} />} />
             <Route path="/otp" element={<OtpPage {...props} />} />
-            <Route path="/refund-request" element={<PrivateRoute element={RefundPage} {...props} />} />
-            <Route path="/refund-request/details" element={<PrivateRoute element={RefundDetailsPage} {...props} />} />
+            <Route path="/product-list" element={<PrivateRoute element={RefundPage} {...props} />} />
+            <Route path="/product-list/details" element={<PrivateRoute element={RefundDetailsPage} {...props} />} />
             <Route path="/bank-info" element={<PrivateRoute element={BankInfoPage} {...props} />} />
             <Route path="/bank-info/confirmation" element={<PrivateRoute element={BankInfoConfirmationPage} {...props} />} />
             <Route path="*" element={<Navigate to="/login" />} />

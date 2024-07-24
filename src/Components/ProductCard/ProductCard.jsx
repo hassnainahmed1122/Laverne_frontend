@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const ProductCard = () => {
   const [quantity, setQuantity] = useState(0);
+  const { t } = useTranslation();
 
   const handleDecrease = () => {
-    setQuantity((prev) => Math.max(prev - 1, 0)); // Ensure quantity is at least 1
+    setQuantity((prev) => Math.max(prev - 1, 0)); 
   };
 
   const handleIncrease = () => {
@@ -16,12 +18,12 @@ export const ProductCard = () => {
       <div className="w-3/5 bg-white shadow-lg rounded-lg p-4 mt-2 flex flex-col space-y-2">
         <div className="flex justify-end items-start mb-2 space-x-2">
           <div className="flex flex-col space-y-1 text-right">
-            <h2 className="text-lg font-semibold text-gray-800">Product Name</h2>
-            <span className="text-gray-600">SAR 123.45</span>
+            <h2 className="text-lg font-semibold text-gray-800">{t('productName')}</h2>
+            <span className="text-gray-600">{t('price')}</span>
           </div>
           <img
             src="https://via.placeholder.com/150"
-            alt="Product"
+            alt={t('productName')}
             className="w-32 h-32 object-cover rounded-lg"
           />
         </div>
@@ -32,7 +34,7 @@ export const ProductCard = () => {
               onClick={handleIncrease}
               className="px-3 py-1 bg-gray-200 text-gray-700 rounded-r-lg"
             >
-              +
+              {t('increase')}
             </button>
             <input
               type="number"
@@ -44,12 +46,12 @@ export const ProductCard = () => {
               onClick={handleDecrease}
               className="px-3 py-1 bg-gray-200 text-gray-700 rounded-l-lg"
             >
-              -
+              {t('decrease')}
             </button>
           </div>
           <div className="text-gray-700 font-semibold">
             <span className='text-red-500'>*</span>
-            Quantity: {quantity}
+            {t('quantityLabel')}: {quantity}
           </div>
         </div>
       </div>
