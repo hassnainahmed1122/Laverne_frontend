@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { FaChevronDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../Context/AuthContext";
 
 const ibanValidationSchema = Yup.string()
     .matches(
@@ -329,6 +330,7 @@ const getBankName = (iban) => {
 };
 
 export const RefundForm = () => {
+    const { quantity, price,  decreaseQuantity, decreasePrice } = useAuth();
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
@@ -355,6 +357,8 @@ export const RefundForm = () => {
         }),
         onSubmit: (values) => {
             console.log("Form values:", values);
+            decreasePrice(price)
+            decreaseQuantity(quantity)
             navigate("/bank-info/confirmation");
         },
     });

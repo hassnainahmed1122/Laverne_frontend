@@ -4,8 +4,10 @@ import { TiShoppingCart } from 'react-icons/ti';
 import { FaCheck } from 'react-icons/fa';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../Context/AuthContext';
 
 export const Navigator = () => {
+  const { quantity } = useAuth();
   const location = useLocation();
   const currentPath = location.pathname;
   const { t } = useTranslation();
@@ -37,7 +39,7 @@ export const Navigator = () => {
               isBankingInfo ? 'text-gray-100 bg-green-700' : 'text-red-100 bg-gray-600'
             } rounded-full`}
           >
-            0
+            { quantity }
           </span>
         </div>
       </div>
