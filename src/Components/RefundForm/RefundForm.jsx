@@ -4,33 +4,7 @@ import * as Yup from "yup";
 import { FaChevronDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
-
-const ibanValidationSchema = Yup.string()
-    .matches(
-        /^SA\d{22}$/,
-        "Invalid IBAN format. Must be 24 characters starting with 'SA'."
-    )
-    .required("IBAN is required")
-    .test(
-        "remove-spaces",
-        "IBAN must not contain spaces",
-        (value) => !/\s/.test(value)
-    )
-    .transform(value => value.replace(/\s+/g, ''));
-
-const bankNameMapping = {
-    80: "RJHI",
-    20: "RIBL",
-    "05": "IMMA",
-    10: "NCBK",
-    55: "BSFR",
-    45: "SABB",
-    15: "ALBI",
-    65: "SIBC",
-    30: "ARNB",
-    60: "BJAZ",
-};
-
+import { useTranslation } from 'react-i18next';
 
 const cities = {
     AbaAlworood: "Aba Alworood",
@@ -321,17 +295,44 @@ const cities = {
     Zilfi: "Zilfi",
 };
 
-const getBankName = (iban) => {
-    if (!iban.startsWith("SA") || iban.length !== 24) {
-        return "Unknown Bank";
-    }
-    const bankIdentifier = iban.substring(4, 6);
-    return bankNameMapping[bankIdentifier] || "Unknown Bank";
+
+const bankNameMapping = {
+    80: "مصرف الراجحي",
+    20: "بنك الرياض",
+    "05": "مصرف الإنماء",
+    10: "البنك الأهلي السعودي",
+    55: "البنك السعودي الفرنسي",
+    45: "البنك السعودي البريطاني",
+    15: "بنك البلاد",
+    65: "البنك السعودي للاستثمار",
+    30: "البنك العربي",
+    60: "بنك الجزيرة",
 };
 
+
 export const RefundForm = () => {
-    const { quantity, price,  decreaseQuantity, decreasePrice } = useAuth();
+    const { t } = useTranslation();
+    const { quantity, price, decreaseQuantity, decreasePrice } = useAuth();
     const navigate = useNavigate();
+    const getBankName = (iban) => {
+        if (!iban.startsWith("SA") || iban.length !== 24) {
+            return t("unknown-bank");
+        }
+        const bankIdentifier = iban.substring(4, 6);
+        return t(bankNameMapping[bankIdentifier] || "unknown-bank");
+    };
+    const ibanValidationSchema = Yup.string()
+        .matches(
+            /^SA\d{22}$/,
+            t('invalid-iban-format')
+        )
+        .required(t('iban-required'))
+        .test(
+            "remove-spaces",
+            t('iban-no-spaces'),
+            (value) => !/\s/.test(value)
+        )
+        .transform(value => value.replace(/\s+/g, ''));
     const formik = useFormik({
         initialValues: {
             firstName: "",
@@ -344,28 +345,28 @@ export const RefundForm = () => {
             city: "",
         },
         validationSchema: Yup.object({
-            firstName: Yup.string().required("First Name is required"),
-            secondName: Yup.string().required("Second Name is required"),
-            familyName: Yup.string().required("Family Name is required"),
+            firstName: Yup.string().required(t("first-name-required")),
+            secondName: Yup.string().required(t("second-name-required")),
+            familyName: Yup.string().required(t("family-name-required")),
             iban: ibanValidationSchema,
             email: Yup.string()
-                .email("Invalid email format")
-                .required("Email is required"),
-            productOpened: Yup.string().required("Product status is required"),
-            reason: Yup.string().required("Reason is required"),
-            city: Yup.string().required("City is required"),
+                .email(t("invalid-email-format"))
+                .required(t("email-required")),
+            productOpened: Yup.string().required(t("product-status-required")),
+            reason: Yup.string().required(t("reason-required")),
+            city: Yup.string().required(t("city-required")),
         }),
         onSubmit: (values) => {
             console.log("Form values:", values);
-            decreasePrice(price)
-            decreaseQuantity(quantity)
+            decreasePrice(price);
+            decreaseQuantity(quantity);
             navigate("/bank-info/confirmation");
         },
     });
 
     return (
         <div className="flex justify-center items-start mt-12 p-4">
-            <div className="w-full md:w-1/2 lg:w-1/3 bg-white p-6 rounded-lg shadow-md">
+            <div className="w-full md:w-1/2 lg:w-1/3 bg-white p-6 rounded-lg shadow-lg">
                 <form onSubmit={formik.handleSubmit} className="space-y-5">
                     <div className="relative">
                         <input
@@ -374,8 +375,8 @@ export const RefundForm = () => {
                             value={formik.values.firstName}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            className="form-input w-full text-right placeholder-right"
-                            placeholder="First Name"
+                            className="form-input w-full text-right placeholder-right border border-gray-300 p-2"
+                            placeholder={t("first-name")}
                         />
                         {formik.touched.firstName && formik.errors.firstName ? (
                             <div className="text-red-500 text-sm mt-1 text-right">
@@ -391,8 +392,8 @@ export const RefundForm = () => {
                             value={formik.values.secondName}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            className="form-input w-full text-right placeholder-right"
-                            placeholder="Second Name"
+                            className="form-input w-full text-right placeholder-right border border-gray-300 p-2"
+                            placeholder={t("second-name")}
                         />
                         {formik.touched.secondName && formik.errors.secondName ? (
                             <div className="text-red-500 text-sm mt-1 text-right">
@@ -408,8 +409,8 @@ export const RefundForm = () => {
                             value={formik.values.familyName}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            className="form-input w-full text-right placeholder-right"
-                            placeholder="Family Name"
+                            className="form-input w-full text-right placeholder-right border border-gray-300 p-2"
+                            placeholder={t("family-name")}
                         />
                         {formik.touched.familyName && formik.errors.familyName ? (
                             <div className="text-red-500 text-sm mt-1 text-right">
@@ -425,8 +426,8 @@ export const RefundForm = () => {
                             value={formik.values.iban}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            className="form-input w-full text-right placeholder-right"
-                            placeholder="IBAN"
+                            className="form-input w-full text-right placeholder-right border border-gray-300 p-2"
+                            placeholder={t("iban")}
                         />
                         {formik.touched.iban && formik.errors.iban ? (
                             <div className="text-red-500 text-sm mt-1 text-right">
@@ -435,7 +436,7 @@ export const RefundForm = () => {
                         ) : null}
                         {formik.values.iban && !formik.errors.iban && (
                             <div className="text-gray-700 text-sm mt-2">
-                                Bank Name: {getBankName(formik.values.iban)}
+                                {t("bank-name")}: {getBankName(formik.values.iban)}
                             </div>
                         )}
                     </div>
@@ -447,8 +448,8 @@ export const RefundForm = () => {
                             value={formik.values.email}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            className="form-input w-full text-right placeholder-right"
-                            placeholder="Email"
+                            className="form-input w-full text-right placeholder-right border border-gray-300 p-2"
+                            placeholder={t("email")}
                         />
                         {formik.touched.email && formik.errors.email ? (
                             <div className="text-red-500 text-sm mt-1 text-right">
@@ -467,10 +468,10 @@ export const RefundForm = () => {
                                 className="form-select w-full text-right appearance-none placeholder-right pr-10 py-2"
                             >
                                 <option value="" disabled>
-                                    Select if product was opened
+                                    {t("select-product-status")}
                                 </option>
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
+                                <option value="yes">{t("yes")}</option>
+                                <option value="no">{t("no")}</option>
                             </select>
                             <div className="absolute inset-y-0 left-0 flex items-center px-2 pointer-events-none">
                                 <FaChevronDown className="text-gray-400" />
@@ -491,13 +492,13 @@ export const RefundForm = () => {
                                 className="form-select w-full text-right appearance-none placeholder-right pr-10 py-2"
                             >
                                 <option value="" disabled>
-                                    Select Reason to Retrieve
+                                    {t("select-reason")}
                                 </option>
                                 <option value="perfume-didn't-suite-me">
-                                    Perfume didn't suite me
+                                    {t("perfume-didn't-suite-me")}
                                 </option>
-                                <option value="damaged-product">Damaged Product</option>
-                                <option value="wrong-product">Wrong Product</option>
+                                <option value="damaged-product">{t("damaged-product")}</option>
+                                <option value="wrong-product">{t("wrong-product")}</option>
                             </select>
                             <div className="absolute inset-y-0 left-0 flex items-center px-2 pointer-events-none">
                                 <FaChevronDown className="text-gray-400" />
@@ -518,11 +519,11 @@ export const RefundForm = () => {
                                 className="form-select w-full text-right appearance-none placeholder-right pr-10 py-2"
                             >
                                 <option value="" disabled>
-                                    Select City
+                                    {t("select-city")}
                                 </option>
                                 {Object.entries(cities).map(([key, city]) => (
-                                    <option key={key} value={key}>
-                                        {city}
+                                    <option key={key} value={t(`cities.${key}`)}>
+                                        {t(`${key}`)}
                                     </option>
                                 ))}
                             </select>
@@ -542,7 +543,7 @@ export const RefundForm = () => {
                             type="submit"
                             className="bg-black text-white py-2 px-4 rounded"
                         >
-                            Complete the refund request
+                            {t("complete-refund-request")}
                         </button>
                     </div>
                 </form>
@@ -550,3 +551,4 @@ export const RefundForm = () => {
         </div>
     );
 };
+
