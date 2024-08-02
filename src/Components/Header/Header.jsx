@@ -18,7 +18,7 @@ export const Header = () => {
       </div>
       <div className="flex flex-col items-center space-y-2 font-dinnextltarabic p-4">
         <img
-          src="https://cdn.salla.sa/XzOPD/EJ37QZ2evPx7y7561LXSZknDyIn19pZFzaaZ5LXh.jpg"
+          src="https://cdn.salla.sa/cdn-cgi/image/fit=scale-down,width=400,height=400,onerror=redirect,format=auto/olVxl/L0ifYZAnWvLIHFJa7RElAmQUMeicmdHm0Sa9sldY.png"
           alt="logo"
           className="w-auto sm:h-14 md:h-20"
         />

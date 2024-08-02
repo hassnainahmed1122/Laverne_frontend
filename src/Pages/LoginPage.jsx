@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowLeft } from 'react-icons/md';
@@ -6,10 +6,16 @@ import { useNavigate } from 'react-router-dom';
 import { Footer } from '../Components/Footer/Footer';
 import flagImage from '../flag.png';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '../Context/AuthContext';
 
 export const LoginPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
   const validationSchema = Yup.object({
     mobileNumber: Yup.string()
@@ -25,18 +31,29 @@ export const LoginPage = () => {
       orderNumber: ''
     },
     validationSchema: validationSchema,
-    onSubmit: values => {
-      console.log("Submitted values:", values);
-      if (values.mobileNumber) {
-        navigate('/otp');
-      } else {
-        navigate('/login');
+    onSubmit: async (values) => {
+      setLoading(true);
+      try {
+        const response = await axios.post('http://localhost:3000/api/v1/customer/login', {
+          phoneNumber: `+966${values.mobileNumber}`,
+          order_number: values.orderNumber,
+        });
+        toast.success(response.data.message);
+        login(response.data.orderId, `+966${values.mobileNumber}`)
+        setTimeout(() => {
+          navigate('/otp');
+        }, 1000)
+      } catch ({ response }) {
+        toast.error(response.data.message);
+      } finally {
+        setLoading(false);
       }
     },
   });
 
   return (
     <>
+      <ToastContainer />
       <div className="flex justify-center items-center p-4" style={{ minHeight: '50vh' }}>
         <div className="text-gray-600 text-xl">
           <div className="flex flex-col justify-center items-center text-[#636362]">
@@ -51,6 +68,7 @@ export const LoginPage = () => {
                   className="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
                   type="button"
                   style={{ height: '50px', width: '150px' }}
+                  disabled={loading}
                 >
                   <MdOutlineKeyboardArrowDown />
                   <p className="px-2">+966</p>
@@ -65,6 +83,7 @@ export const LoginPage = () => {
                   className="py-2.5 px-4 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-e-lg focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-700"
                   placeholder={t('enterMobileNumber')}
                   style={{ height: '50px', width: '200px' }}
+                  disabled={loading}
                 />
               </div>
               {formik.touched.mobileNumber && formik.errors.mobileNumber ? (
@@ -83,6 +102,7 @@ export const LoginPage = () => {
                   className="py-2.5 px-4 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-e-lg focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-700"
                   placeholder={t('enterOrderNumber')}
                   style={{ height: '50px', width: '100%' }}
+                  disabled={loading}
                 />
               </div>
               {formik.touched.orderNumber && formik.errors.orderNumber ? (
@@ -93,10 +113,11 @@ export const LoginPage = () => {
 
               <button
                 type="submit"
-                className="w-full py-2 bg-black text-white rounded-md hover:cursor-pointer"
+                className={`w-full py-2 bg-black text-white rounded-md ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:cursor-pointer'}`}
+                disabled={loading}
               >
                 <div className="flex items-center justify-center">
-                  <span>{t('access')}</span>
+                  <span>{loading ? t('loading') : t('access')}</span>
                   <MdOutlineKeyboardArrowLeft />
                 </div>
               </button>

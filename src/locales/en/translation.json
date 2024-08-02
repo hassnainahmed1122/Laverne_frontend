@@ -27,7 +27,7 @@
         "shippingInfo": "Shipping and Delivery Information",
         "privacyPolicy": "Privacy Policy",
         "connectWithUs": "Connect with Us",
-        "productReturnPlatform": "Laverne Product Return Platform",
+        "productReturnPlatform": "THNYAN Product Return Platform",
         "bankingData": "Banking Data",
         "refundBasket": "Refund Basket",
         "productName": "Product Name",
@@ -38,8 +38,8 @@
         "refundBucket": "Refund Bucket",
         "refundDetails": "SAR {{price}} - projects {{quantity}}",
         "request": "Request",
-        "orderDetails": "Order details #1262894",
-        "daysAgo": "5 days ago",
+        "orderDetails": "Order details #{{order_id}}",
+        "daysAgo": "{{ daysPassed }} days ago",
         "underRevision": "Under Revision",
         "modalReview": "The request is under review",
         "close": "Close",
@@ -349,5 +349,8 @@
         "damaged-product": "Damaged Product",
         "wrong-product": "Wrong Product",
         "complete-refund-request": "Complete the refund request",
-        "unknown-bank": "Unknown Bank"
+        "unknown-bank": "Unknown Bank",
+        "goBack": "Back",
+        "timeRemaining": "expiring in",
+        "timeExpired": "time expired go back and regenerate again"
 }

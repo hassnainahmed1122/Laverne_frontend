@@ -1,19 +1,34 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../Context/AuthContext';
 
-export const ProductCard = () => {
-  const { quantity, price, increaseQuantity, decreaseQuantity, increasePrice, decreasePrice } = useAuth();
+export const ProductCard = ({ item }) => {
+  const { quantity, increaseQuantity, decreaseQuantity, increasePrice, decreasePrice } = useAuth();
   const { t } = useTranslation();
 
+  const { quantity: itemQuantity,Product } = item;
+  const {
+    name,
+    price,
+    tax,
+    discount,
+    thumbnail,
+  } = Product;
+
+  const totalPrice = (parseFloat(price) + parseFloat(tax) - parseFloat(discount)) * itemQuantity;
+
   const handleDecrease = () => {
-    decreasePrice(100)
-    decreaseQuantity(1) 
+    if (itemQuantity > 0) {
+      decreaseQuantity(1);
+      decreasePrice(parseFloat(price) + parseFloat(tax) - parseFloat(discount));
+    }
   };
 
   const handleIncrease = () => {
-    increaseQuantity(1)
-    increasePrice(100)
+    if (quantity < itemQuantity) {
+      increaseQuantity(1);
+      increasePrice(parseFloat(price) + parseFloat(tax) - parseFloat(discount));
+    }
   };
 
   return (
@@ -21,12 +36,12 @@ export const ProductCard = () => {
       <div className="w-3/5 bg-white shadow-lg rounded-lg p-4 mt-2 flex flex-col space-y-2">
         <div className="flex justify-end items-start mb-2 space-x-2">
           <div className="flex flex-col space-y-1 text-right">
-            <h2 className="text-lg font-semibold text-gray-800">{t('productName')}</h2>
-            <span className="text-gray-600">{t('price', {price: price})}</span>
+            <h2 className="text-lg font-semibold text-gray-800">{name}</h2>
+            <span className="text-gray-600">{t('price', { price: totalPrice.toFixed(2) })}</span>
           </div>
           <img
-            src="https://via.placeholder.com/150"
-            alt={t('productName')}
+            src={thumbnail}
+            alt={name}
             className="w-32 h-32 object-cover rounded-lg"
           />
         </div>
@@ -41,7 +56,9 @@ export const ProductCard = () => {
             </button>
             <input
               type="number"
-              value={quantity}
+              value={itemQuantity}
+              min="0"
+              max={itemQuantity}
               readOnly
               className="w-24 text-center border-gray-300 border rounded-md"
             />
@@ -54,7 +71,7 @@ export const ProductCard = () => {
           </div>
           <div className="text-gray-700 font-semibold">
             <span className='text-red-500'>*</span>
-            {t('quantityLabel')}: {quantity}
+            {t('quantityLabel')}: {itemQuantity}
           </div>
         </div>
       </div>
