@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../Context/AuthContext';
 
 export const Navigator = () => {
-  const { quantity } = useAuth();
+  const { totalQuantity } = useAuth();
   const location = useLocation();
   const currentPath = location.pathname;
   const { t } = useTranslation();
@@ -39,7 +39,7 @@ export const Navigator = () => {
               isBankingInfo ? 'text-gray-100 bg-green-700' : 'text-red-100 bg-gray-600'
             } rounded-full`}
           >
-            { quantity }
+            { totalQuantity }
           </span>
         </div>
       </div>

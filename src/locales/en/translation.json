@@ -31,7 +31,10 @@
         "bankingData": "Banking Data",
         "refundBasket": "Refund Basket",
         "productName": "Product Name",
-        "price": "SAR {{price}}",
+        "price": "Base Price: SAR {{price}}",
+        "tax": "Tax: SAR {{price}}",
+        "discount": "Discount: SAR {{price}}",
+        "totalProductPrice": "Total: SAR {{price}}",
         "quantityLabel": "Quantity",
         "increase": "+",
         "decrease": "-",
@@ -352,5 +355,6 @@
         "unknown-bank": "Unknown Bank",
         "goBack": "Back",
         "timeRemaining": "expiring in",
-        "timeExpired": "time expired go back and regenerate again"
+        "timeExpired": "time expired go back and regenerate again",
+        "next": "Next"
 }

@@ -7,12 +7,13 @@ export const Header = () => {
   const { t } = useTranslation();
   const location = useLocation();
 
-  const showRefundBasket = /login|otp|order-number/.test(location.pathname);
+  const showRefundBasket = location.pathname === '/product-list/details' || location.pathname === '/bank-info';
+
 
   return (
     <div className="w-full h-[14vh] bg-white shadow-md px-20 flex items-center justify-between">
       <div className="flex items-center">
-        {!showRefundBasket && (
+        {showRefundBasket && (
           <RefundBasket />
         )}
       </div>

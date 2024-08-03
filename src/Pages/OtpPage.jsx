@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
@@ -13,21 +13,21 @@ import { useAuth } from "../Context/AuthContext";
 export const OtpPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { goToLogin,  setTokenAndAuthenticatedToTrue } = useAuth();
-  const [timeLeft, setTimeLeft] = useState(60); // Timer for 1 minute
+  const { goToLogin, setTokenAndAuthenticatedToTrue } = useAuth();
+  const [timeLeft, setTimeLeft] = useState(60);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
+  // Form validation schema
   const validationSchema = Yup.object({
     otp: Yup.string()
       .matches(/^\d{6}$/, t('invalidCode'))
       .required(t('verificationCodeRequired'))
   });
 
+  // Formik setup
   const formik = useFormik({
-    initialValues: {
-      otp: ""
-    },
-    validationSchema: validationSchema,
+    initialValues: { otp: "" },
+    validationSchema,
     onSubmit: async (values) => {
       const orderNumber = localStorage.getItem('order_number');
       const phoneNumber = localStorage.getItem('phone_number');
@@ -39,43 +39,39 @@ export const OtpPage = () => {
 
       try {
         const response = await axios.post('http://localhost:3000/api/v1/customer/verify-otp', {
-          phoneNumber: phoneNumber,
+          phoneNumber,
           otp: values.otp,
           order_id: orderNumber,
         });
-        
+
         toast.success(response.data.message);
-        setTokenAndAuthenticatedToTrue(response.data.token)
-        setTimeout(() => {
-          navigate('/product-list');
-        }, 1000)
+        setTokenAndAuthenticatedToTrue(response.data.token);
+        setTimeout(() => navigate('/product-list'), 1000);
       } catch (error) {
         toast.error(error.response?.data?.message || t('errorOccurred'));
       }
     }
   });
 
+  // Timer logic
   useEffect(() => {
-    // Start the countdown timer
-    if (timeLeft > 0) {
-      const timerId = setTimeout(() => {
-        setTimeLeft(timeLeft - 1);
-      }, 1000);
+    if (timeLeft <= 0) return;
 
-      return () => clearTimeout(timerId);
-    }
+    const timerId = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
+    return () => clearTimeout(timerId);
   }, [timeLeft]);
 
+  // Update button disabled state based on input and timer
   useEffect(() => {
-    // Disable the button if the input is empty or time has run out
     setIsButtonDisabled(!formik.values.otp || timeLeft === 0);
   }, [formik.values.otp, timeLeft]);
 
-  const formatTime = (seconds) => {
+  // Format time remaining
+  const formatTime = useCallback((seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes < 10 ? '0' : ''}${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-  };
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }, []);
 
   return (
     <>
@@ -109,14 +105,14 @@ export const OtpPage = () => {
                   className="py-2.5 px-4 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-e-lg focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-700"
                   placeholder={t('enterVerificationCode')}
                   style={{ height: "50px", width: "100%" }}
-                  disabled={timeLeft === 0} // Disable input when time runs out
+                  disabled={timeLeft === 0}
                 />
               </div>
-              {formik.touched.otp && formik.errors.otp ? (
+              {formik.touched.otp && formik.errors.otp && (
                 <div className="text-red-500 text-sm mb-4">
                   {formik.errors.otp}
                 </div>
-              ) : null}
+              )}
 
               <div className="text-gray-500 text-sm mb-4">
                 {timeLeft > 0 ? `${t('timeRemaining')}: ${formatTime(timeLeft)}` : t('timeExpired')}

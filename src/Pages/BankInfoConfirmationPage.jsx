@@ -3,11 +3,13 @@ import { ButtonNavigator } from "../Components/ButtonNavigator/ButtonNavigator";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { BankInfoConfirmation } from "../Components/BankInfoConfirmation/BankInfoConfirmation";
 import { useNavigate } from "react-router-dom";
+import CustomerInfoWithLogout from "../Components/Customer/Customer";
 
 export const BankInfoConfirmationPage = () => {
    const navigte = useNavigate();
    return (
     <>
+        <CustomerInfoWithLogout />
         <Navigator />
         <BankInfoConfirmation />
         <div className="flex justify-center mt-10">

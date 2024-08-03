@@ -5,6 +5,8 @@ import { FaChevronDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
 import { useTranslation } from 'react-i18next';
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const cities = {
     AbaAlworood: "Aba Alworood",
@@ -312,8 +314,11 @@ const bankNameMapping = {
 
 export const RefundForm = () => {
     const { t } = useTranslation();
-    const { quantity, price, decreaseQuantity, decreasePrice } = useAuth();
+    const { totalPrice ,orderData, orderItems, setTotalPrice, setTotalQuantity } = useAuth();
     const navigate = useNavigate();
+
+    const paymentMethodIncludesTabbyOrTamara = orderData?.payment_method?.toLowerCase().includes('tabby') || orderData?.payment_method?.toLowerCase().includes('tamara');
+
     const getBankName = (iban) => {
         if (!iban.startsWith("SA") || iban.length !== 24) {
             return t("unknown-bank");
@@ -321,18 +326,24 @@ export const RefundForm = () => {
         const bankIdentifier = iban.substring(4, 6);
         return t(bankNameMapping[bankIdentifier] || "unknown-bank");
     };
+
     const ibanValidationSchema = Yup.string()
-        .matches(
-            /^SA\d{22}$/,
-            t('invalid-iban-format')
-        )
+        .matches(/^SA\d{22}$/, t('invalid-iban-format'))
         .required(t('iban-required'))
-        .test(
-            "remove-spaces",
-            t('iban-no-spaces'),
-            (value) => !/\s/.test(value)
-        )
+        .test("remove-spaces", t('iban-no-spaces'), (value) => !/\s/.test(value))
         .transform(value => value.replace(/\s+/g, ''));
+
+    const validationSchema = Yup.object({
+        firstName: Yup.string().required(t("first-name-required")),
+        secondName: Yup.string().required(t("second-name-required")),
+        familyName: Yup.string().required(t("family-name-required")),
+        iban: !paymentMethodIncludesTabbyOrTamara ? ibanValidationSchema : Yup.string(),
+        email: Yup.string().email(t("invalid-email-format")).required(t("email-required")),
+        productOpened: Yup.string().required(t("product-status-required")),
+        reason: Yup.string().required(t("reason-required")),
+        city: Yup.string().required(t("city-required")),
+    });
+
     const formik = useFormik({
         initialValues: {
             firstName: "",
@@ -344,23 +355,52 @@ export const RefundForm = () => {
             reason: "",
             city: "",
         },
-        validationSchema: Yup.object({
-            firstName: Yup.string().required(t("first-name-required")),
-            secondName: Yup.string().required(t("second-name-required")),
-            familyName: Yup.string().required(t("family-name-required")),
-            iban: ibanValidationSchema,
-            email: Yup.string()
-                .email(t("invalid-email-format"))
-                .required(t("email-required")),
-            productOpened: Yup.string().required(t("product-status-required")),
-            reason: Yup.string().required(t("reason-required")),
-            city: Yup.string().required(t("city-required")),
-        }),
-        onSubmit: (values) => {
-            console.log("Form values:", values);
-            decreasePrice(price);
-            decreaseQuantity(quantity);
-            navigate("/bank-info/confirmation");
+        validationSchema,
+        onSubmit: async (values) => {
+            const returnItems = orderItems.map(item => {
+                return {product_id: item.Product.id,
+                    quantity: item.refund_quantity}
+                })
+                const payload = {
+                    payment_method: orderData?.payment_method,
+                    items: returnItems,
+                    refund_amount: totalPrice,
+                    city: values.city,
+                    reason: values.reason,
+                    condition: values.productOpened,
+                    first_name: values.firstName,
+                    last_name: values.secondName,
+                    family_name: values.familyName,
+                    email: values.email,
+                }
+                
+                if(values.iban) {
+                    payload.iban = values.iban
+                }
+                const token = localStorage.getItem('token');
+                
+                try {
+                    const response = await axios.post(
+                        'http://localhost:3000/api/v1/customer/refund-requests',
+                        payload,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    );
+                    if(response.data.uuid) {
+                        toast.success("successfully submitted the refund request")
+                        setTotalPrice(0);
+                        setTotalQuantity(0);
+                        setTimeout(() => {
+                            navigate("/bank-info/confirmation");
+                        }, 1000)
+                    }
+                } catch ({ response }) {
+                toast.error(response.data.message)
+            }
         },
     });
 
@@ -419,27 +459,29 @@ export const RefundForm = () => {
                         ) : null}
                     </div>
 
-                    <div className="relative">
-                        <input
-                            type="text"
-                            name="iban"
-                            value={formik.values.iban}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            className="form-input w-full text-right placeholder-right border border-gray-300 p-2"
-                            placeholder={t("iban")}
-                        />
-                        {formik.touched.iban && formik.errors.iban ? (
-                            <div className="text-red-500 text-sm mt-1 text-right">
-                                {formik.errors.iban}
-                            </div>
-                        ) : null}
-                        {formik.values.iban && !formik.errors.iban && (
-                            <div className="text-gray-700 text-sm mt-2">
-                                {t("bank-name")}: {getBankName(formik.values.iban)}
-                            </div>
-                        )}
-                    </div>
+                    {!paymentMethodIncludesTabbyOrTamara && (
+                        <div className="relative">
+                            <input
+                                type="text"
+                                name="iban"
+                                value={formik.values.iban}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                className="form-input w-full text-right placeholder-right border border-gray-300 p-2"
+                                placeholder={t("iban")}
+                            />
+                            {formik.touched.iban && formik.errors.iban ? (
+                                <div className="text-red-500 text-sm mt-1 text-right">
+                                    {formik.errors.iban}
+                                </div>
+                            ) : null}
+                            {formik.values.iban && !formik.errors.iban && (
+                                <div className="text-gray-700 text-sm mt-2">
+                                    {t("bank-name")}: {getBankName(formik.values.iban)}
+                                </div>
+                            )}
+                        </div>
+                    )}
 
                     <div className="relative">
                         <input
@@ -494,11 +536,11 @@ export const RefundForm = () => {
                                 <option value="" disabled>
                                     {t("select-reason")}
                                 </option>
-                                <option value="perfume-didn't-suite-me">
+                                <option value="perfume didn't suite me">
                                     {t("perfume-didn't-suite-me")}
                                 </option>
-                                <option value="damaged-product">{t("damaged-product")}</option>
-                                <option value="wrong-product">{t("wrong-product")}</option>
+                                <option value="damaged product">{t("damaged-product")}</option>
+                                <option value="wrong product">{t("wrong-product")}</option>
                             </select>
                             <div className="absolute inset-y-0 left-0 flex items-center px-2 pointer-events-none">
                                 <FaChevronDown className="text-gray-400" />
@@ -522,7 +564,7 @@ export const RefundForm = () => {
                                     {t("select-city")}
                                 </option>
                                 {Object.entries(cities).map(([key, city]) => (
-                                    <option key={key} value={t(`cities.${key}`)}>
+                                    <option key={key} value={cities[t(`${key}`)]}>
                                         {t(`${key}`)}
                                     </option>
                                 ))}

@@ -2,34 +2,35 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../Context/AuthContext';
 
-export const ProductCard = ({ item }) => {
-  const { quantity, increaseQuantity, decreaseQuantity, increasePrice, decreasePrice } = useAuth();
+export const ProductCard = ({ item, onIncrease, onDecrease }) => {
   const { t } = useTranslation();
-
-  const { quantity: itemQuantity,Product } = item;
   const {
-    name,
-    price,
-    tax,
-    discount,
-    thumbnail,
-  } = Product;
+    refund_quantity: refundQuantity = 0,
+    quantity: itemQuantity = 0,
+    Product: {
+      name,
+      price = 0,
+      tax = 0,
+      discount = 0,
+      thumbnail,
+      tax_percentage: taxPercentage = 0,
+    },
+  } = item;
 
-  const totalPrice = (parseFloat(price) + parseFloat(tax) - parseFloat(discount)) * itemQuantity;
+  // Calculations
+  const itemPrice = parseFloat(price);
+  const itemTaxPercentage = parseFloat(taxPercentage);
+  const itemDiscount = parseFloat(discount);
 
-  const handleDecrease = () => {
-    if (itemQuantity > 0) {
-      decreaseQuantity(1);
-      decreasePrice(parseFloat(price) + parseFloat(tax) - parseFloat(discount));
-    }
-  };
+  const basePrice = itemPrice * refundQuantity;
+  const totalDiscount = itemDiscount * refundQuantity;
+  const priceAfterDiscount = basePrice - totalDiscount;
+  const taxAmount = (priceAfterDiscount * (itemTaxPercentage / 100)).toFixed(2);
+  const totalPrice = basePrice.toFixed(2);
 
-  const handleIncrease = () => {
-    if (quantity < itemQuantity) {
-      increaseQuantity(1);
-      increasePrice(parseFloat(price) + parseFloat(tax) - parseFloat(discount));
-    }
-  };
+  // Event Handlers
+  const handleDecrease = () => onDecrease(item.id);
+  const handleIncrease = () => onIncrease(item.id);
 
   return (
     <div className="flex justify-center items-center w-full">
@@ -37,7 +38,10 @@ export const ProductCard = ({ item }) => {
         <div className="flex justify-end items-start mb-2 space-x-2">
           <div className="flex flex-col space-y-1 text-right">
             <h2 className="text-lg font-semibold text-gray-800">{name}</h2>
-            <span className="text-gray-600">{t('price', { price: totalPrice.toFixed(2) })}</span>
+            <span className="text-gray-600">{t('price', { price: itemPrice.toFixed(2) })}</span>
+            <span className="text-gray-600">{t('tax', { price: taxAmount })}</span>
+            <span className="text-gray-600">{t('discount', { price: totalDiscount.toFixed(2) })}</span>
+            <span className="text-gray-600">{t('totalProductPrice', { price: totalPrice })}</span>
           </div>
           <img
             src={thumbnail}
@@ -47,30 +51,32 @@ export const ProductCard = ({ item }) => {
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between items-center mt-2 space-y-2 sm:space-y-0 sm:space-x-4">
-          <div className="flex items-center justify-center space-x-2">
+          <div className="flex items-center space-x-2">
             <button
               onClick={handleIncrease}
               className="px-3 py-1 bg-gray-200 text-gray-700 rounded-r-lg"
+              disabled={refundQuantity >= itemQuantity}
             >
               {t('increase')}
             </button>
             <input
               type="number"
-              value={itemQuantity}
-              min="0"
+              min={0}
               max={itemQuantity}
+              value={refundQuantity}
               readOnly
               className="w-24 text-center border-gray-300 border rounded-md"
             />
             <button
               onClick={handleDecrease}
               className="px-3 py-1 bg-gray-200 text-gray-700 rounded-l-lg"
+              disabled={refundQuantity === 0}
             >
               {t('decrease')}
             </button>
           </div>
           <div className="text-gray-700 font-semibold">
-            <span className='text-red-500'>*</span>
+            <span className="text-red-500">*</span>
             {t('quantityLabel')}: {itemQuantity}
           </div>
         </div>
