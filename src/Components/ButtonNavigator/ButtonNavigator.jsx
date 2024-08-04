@@ -16,8 +16,8 @@ export const ButtonNavigator = ({ backLocation }) => {
   const isBankInfoPage = location.pathname.includes('/bank-info');
 
   // Calculate totals using useMemo
-  const { totalAmount, totalTax, totalDiscount } = useMemo(() => {
-    const initialValues = { priceSum: 0, taxSum: 0, discountSum: 0 };
+  const { totalAmount, totalTax, totalDiscount, orderTax } = useMemo(() => {
+    const initialValues = { priceSum: 0, taxSum: 0, discountSum: 0, };
 
     const totals = orderItems.reduce((acc, item) => {
       const quantity = parseFloat(item.refund_quantity);
@@ -36,12 +36,13 @@ export const ButtonNavigator = ({ backLocation }) => {
     const otherCostTax = (parseFloat(orderData?.tax_percentage) / 100) * (shippingCost + cashOnDelivery)
     const refundFee = 19;
 
-    const finalTotalPrice = (totals.priceSum + otherCostTax + totals.taxSum - totals.discountSum - shippingCost - cashOnDelivery - refundFee).toFixed(2);
+    const finalTotalPrice = (totals.priceSum + totals.taxSum - otherCostTax - totals.discountSum - shippingCost - cashOnDelivery - refundFee).toFixed(2);
 
     return {
       totalDiscount: totals.discountSum.toFixed(2),
       totalAmount: finalTotalPrice,
-      totalTax: (totals.taxSum +  otherCostTax).toFixed(2),
+      totalTax: (totals.taxSum).toFixed(2),
+      orderTax: otherCostTax.toFixed(2)
     };
   }, [orderItems, orderData]);
 
@@ -87,13 +88,12 @@ export const ButtonNavigator = ({ backLocation }) => {
         <div className="p-4">
           <h2 className="text-xl font-semibold mb-4">{t('receipt')}</h2>
           <div className="space-y-2">
-            <DetailRow label="Subtotal:" value={totalPrice} />
-            <DetailRow label="TAX:" value={totalTax} />
-            <DetailRow label="Discount:" value={`-${totalDiscount}`} />
+            <DetailRow label="Subtotal With Tax:" value={(parseFloat(orderData.sub_total) + parseFloat(totalTax) - parseFloat(totalDiscount)).toFixed(2)} />
+            <DetailRow label="Shipping And Cash On Delivery Tax:" value={`-${orderTax}`} />
             <DetailRow label="Shipping Cost:" value={`-${orderData?.shipping_cost}`} />
             <DetailRow label="Cash On Delivery:" value={`-${orderData?.cash_on_delivery}`} />
             <DetailRow label="Refund Fee:" value="-19.00" isBold />
-            <DetailRow label="Total:" value={totalAmount} isBold borderTop />
+            <DetailRow label="Total Refundable Amount:" value={totalAmount} isBold borderTop />
           </div>
         </div>
       </Modal>

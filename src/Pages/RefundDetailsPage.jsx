@@ -40,13 +40,10 @@ export const RefundDetailsPage = () => {
         refund_quantity: 0
       }));
 
-      // const totalProducts = updatedOrderItems.reduce((acc, item) => acc + item.quantity, 0);
-      // const totalPrice = parseFloat(data.order.sub_total).toFixed(2);
-
       setOrderData(data.order);
       setOrderItems(updatedOrderItems);
-      // setTotalPrice(totalPrice);
-      // setTotalQuantity(totalProducts);
+      setTotalPrice(0);
+      setTotalQuantity(0);
     } catch (err) {
       console.error('Failed to fetch order data:', err);
     } finally {
@@ -57,7 +54,9 @@ export const RefundDetailsPage = () => {
   // Update totals based on item quantity change
   const updateTotals = (item, increase) => {
     const price = parseFloat(item.Product.price) || 0;
-    const change = price * (increase ? 1 : -1);
+    const tax = parseFloat(item.Product.tax) || 0
+    const discount = parseFloat(item.Product.discount) || 0
+    const change = (price + tax - discount) * (increase ? 1 : -1);
     
     setTotalQuantity(prevQuantity => {
       const newQuantity = increase ? prevQuantity + 1 : prevQuantity - 1;
