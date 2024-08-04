@@ -6,6 +6,7 @@ import CustomerInfoWithLogout from "../Components/Customer/Customer";
 import { useAuth } from "../Context/AuthContext";
 import React, { useCallback, useEffect } from "react";
 import { toast ,ToastContainer } from "react-toastify";
+import { Footer } from "../Components/Footer/Footer";
 
 
 export const BankInfoConfirmationPage = () => {
@@ -63,6 +64,7 @@ export const BankInfoConfirmationPage = () => {
                 <MdOutlineKeyboardArrowRight className="text-white" />
             </button>
         </div>
+        <Footer />
     </>
    ) 
 }

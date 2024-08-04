@@ -6,7 +6,7 @@ export const Footer = () => {
   const { t } = useTranslation();
 
   return (
-    <footer className="bg-black text-gray-300 py-10 px-4 md:px-10">
+    <footer className="bg-black text-gray-300 py-10 px-4 md:px-10 mt-10">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center px-20">
         <div>
           <h2 className="text-xl font-bold border-b border-gray-300 pb-2 mb-4 inline-block w-full">

@@ -6,12 +6,12 @@ import { useAuth } from '../Context/AuthContext';
 import Loader from '../Components/Loader/Loader';
 import { toast, ToastContainer } from 'react-toastify';
 import CustomerInfoWithLogout from '../Components/Customer/Customer';
+import { Footer } from '../Components/Footer/Footer';
 
 export const RefundDetailsPage = () => {
   const { orderItems, setOrderItems, setOrderData, setTotalPrice, setTotalQuantity, logout } = useAuth();
   const [loading, setLoading] = useState(true);
 
-  // Fetch order data
   const fetchOrderData = useCallback(async () => {
     try {
       const response = await fetch('http://localhost:3000/api/v1/customer/order-details', {
@@ -37,16 +37,16 @@ export const RefundDetailsPage = () => {
       const data = await response.json();
       const updatedOrderItems = data.order.OrderItems.map(item => ({
         ...item,
-        refund_quantity: item.quantity
+        refund_quantity: 0
       }));
 
-      const totalProducts = updatedOrderItems.reduce((acc, item) => acc + item.quantity, 0);
-      const totalPrice = parseFloat(data.order.sub_total).toFixed(2);
+      // const totalProducts = updatedOrderItems.reduce((acc, item) => acc + item.quantity, 0);
+      // const totalPrice = parseFloat(data.order.sub_total).toFixed(2);
 
       setOrderData(data.order);
       setOrderItems(updatedOrderItems);
-      setTotalPrice(totalPrice);
-      setTotalQuantity(totalProducts);
+      // setTotalPrice(totalPrice);
+      // setTotalQuantity(totalProducts);
     } catch (err) {
       console.error('Failed to fetch order data:', err);
     } finally {
@@ -109,6 +109,7 @@ export const RefundDetailsPage = () => {
         ))
       )}
       <ButtonNavigator backLocation='/product-list' />
+      <Footer />
     </>
   );
 };

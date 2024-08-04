@@ -5,6 +5,7 @@ import CustomerInfoWithLogout from "../Components/Customer/Customer"
 import { useAuth } from "../Context/AuthContext"
 import { ToastContainer, toast } from "react-toastify"
 import React, {useEffect, useCallback } from "react"
+import { Footer } from "../Components/Footer/Footer"
 export const BankInfoPage = (props) => {
     const {  setOrderData, setOrderItems, logout } = useAuth();
     const fetchOrderData = useCallback(async () => {
@@ -51,6 +52,7 @@ export const BankInfoPage = (props) => {
             <Navigator />
             <RefundForm />
             <ButtonNavigator backLocation={'/product-list/details'}/>
+            <Footer/>
         </>
     )
 }

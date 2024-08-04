@@ -5,6 +5,7 @@ import Loader from '../Components/Loader/Loader';
 import { useAuth } from '../Context/AuthContext';
 import { toast, ToastContainer } from 'react-toastify';
 import CustomerInfoWithLogout from '../Components/Customer/Customer';
+import { Footer } from '../Components/Footer/Footer';
 
 export const RefundPage = () => {
     const [loading, setLoading] = useState(true);
@@ -29,7 +30,7 @@ export const RefundPage = () => {
             const data = await response.json();
             const updatedOrderItems = data.order.OrderItems.map(item => ({
                 ...item,
-                refund_quantity: item.quantity
+                refund_quantity: 0
             }));
 
             setOrderData(data.order);
@@ -64,6 +65,7 @@ export const RefundPage = () => {
             ) : (
                 <p className='w-100 flex justify-center'>No order data available.</p>
             )}
+            <Footer />
         </>
     );
 };

@@ -28,20 +28,20 @@ export const ButtonNavigator = ({ backLocation }) => {
       acc.priceSum += price * quantity;
       acc.taxSum += tax * quantity;
       acc.discountSum += discount * quantity;
-
+      
       return acc;
     }, initialValues);
-
     const shippingCost = parseFloat(orderData?.shipping_cost) || 0;
     const cashOnDelivery = parseFloat(orderData?.cash_on_delivery) || 0;
-    const refundFee = -19;
+    const otherCostTax = (parseFloat(orderData?.tax_percentage) / 100) * (shippingCost + cashOnDelivery)
+    const refundFee = 19;
 
-    const finalTotalPrice = (totals.priceSum + totals.taxSum - totals.discountSum + shippingCost + cashOnDelivery + refundFee).toFixed(2);
+    const finalTotalPrice = (totals.priceSum + otherCostTax + totals.taxSum - totals.discountSum - shippingCost - cashOnDelivery - refundFee).toFixed(2);
 
     return {
       totalDiscount: totals.discountSum.toFixed(2),
       totalAmount: finalTotalPrice,
-      totalTax: totals.taxSum.toFixed(2),
+      totalTax: (totals.taxSum +  otherCostTax).toFixed(2),
     };
   }, [orderItems, orderData]);
 
@@ -90,8 +90,8 @@ export const ButtonNavigator = ({ backLocation }) => {
             <DetailRow label="Subtotal:" value={totalPrice} />
             <DetailRow label="TAX:" value={totalTax} />
             <DetailRow label="Discount:" value={`-${totalDiscount}`} />
-            <DetailRow label="Shipping Cost:" value={orderData?.shipping_cost} />
-            <DetailRow label="Cash On Delivery:" value={orderData?.cash_on_delivery} />
+            <DetailRow label="Shipping Cost:" value={`-${orderData?.shipping_cost}`} />
+            <DetailRow label="Cash On Delivery:" value={`-${orderData?.cash_on_delivery}`} />
             <DetailRow label="Refund Fee:" value="-19.00" isBold />
             <DetailRow label="Total:" value={totalAmount} isBold borderTop />
           </div>
