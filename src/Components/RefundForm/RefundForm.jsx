@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
 import { useTranslation } from 'react-i18next';
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import Select from 'react-select'; 
 
 const cities = {
     "AbaAlworood": "أباء الورد",
@@ -22,41 +23,41 @@ const cities = {
     "Afif": "أفيف",
     "Aflaj": "أفلاج",
     "AhadMasarha": "أحد مسرحة",
-    "AhadRufaidah": "أحد رفَيْدَة", 
-     "AinDar": "عين در",
+    "AhadRufaidah": "أحد رفَيْدَة",
+    "AinDar": "عين در",
     "AlAdari": "العدَّاري",
-    "AlAis": "العيس", 
-     "AlAjfar": "العجفر",
-     "AlAmmarah": "العمارة",
-     "AlArdah": "العردة",
-     "AlArja": "العرجة",
+    "AlAis": "العيس",
+    "AlAjfar": "العجفر",
+    "AlAmmarah": "العمارة",
+    "AlArdah": "العردة",
+    "AlArja": "العرجة",
     "AlAsyah": "العسية",
-     "AlBada": "البدة",
-     "AlBashayer": "البشاير",
+    "AlBada": "البدة",
+    "AlBashayer": "البشاير",
     "AlBatra": "البترة",
-     "AlBijadyah": "البجادية",
+    "AlBijadyah": "البجادية",
     "AlDalemya": "الدلمية",
-     "AlFuwaileq": "الفويلق",
+    "AlFuwaileq": "الفويلق",
     "AlHait": "الحيت",
     "AlHaith": "الحيث",
-     "AlHassa": "الحسا",
+    "AlHassa": "الحسا",
     "AlHayathem": "الحياتهم",
-     "AlHufayyirah": "الحفيرة",
-     "AlHulayfahAsSufla": "الحليفة السفلى",
+    "AlHufayyirah": "الحفيرة",
+    "AlHulayfahAsSufla": "الحليفة السفلى",
     "AlIdabi": "العدبي",
-     "AlJishah": "الجشة",
-     "AlJumum": "الجموم",
+    "AlJishah": "الجشة",
+    "AlJumum": "الجموم",
     "AlKhishaybi": "الخيشبي",
     "AlKhitah": "الخطة",
     "AlLaqayit": "اللقيط",
     "AlMada": "المدة",
-     "AlMadaya": "المداية",
+    "AlMadaya": "المداية",
     "AlMadinahAlMunawwarah": "المدينة المنورة",
     "AlMahani": "المهاني",
-     "AlMahd": "المهد",
+    "AlMahd": "المهد",
     "AlMidrij": "المدرج",
     "AlMoya": "المويا",
-     "AlQarin": "القارن",
+    "AlQarin": "القارن",
     "AlUwayqilah": "العويقلة",
     "AlWasayta": "الوسيطة",
     "AlJsh": "الجش",
@@ -65,10 +66,10 @@ const cities = {
     "Alnabhanya": "النبهانية",
     "Alrass": "الرس",
     "Amaq": "عماق",
-     "AnNabkAbuQasr": "النبك أبو قصر",
+    "AnNabkAbuQasr": "النبك أبو قصر",
     "AnNafiah": "النافية",
-     "AnNuqrah": "النقرة",
-     "Anak": "عنك",
+    "AnNuqrah": "النقرة",
+    "Anak": "عنك",
     "Aqiq": "عقيق",
     "Aqool": "عقول",
     "ArRadifah": "الرادفة",
@@ -162,121 +163,121 @@ const cities = {
     "Jalajel": "جلجل",
     "Jeddah": "جدة",
     "Jouf": "الجوف",
-        "Jubail": "الجبيل",
-        "Kahlah": "كحلة",
-        "Kara": "كرا",
-        "KaraA": "كرا أ",
-        "Karboos": "كربوس",
-        "Khafji": "الخفجي",
-        "Khaibar": "خيبر",
-        "Khairan": "خيراً",
-        "Khamaseen": "الخمسين",
-        "KhamisMushait": "خميس مشيط",
-        "Kharj": "الخرج",
-        "Khasawyah": "الخصاوية",
-        "Khobar": "الخبر",
-        "Khodaria": "الخضرية",
-        "Khulais": "خليص",
-        "KingAbdullahEconomicCity": "مدينة الملك عبدالله الاقتصادية",
-        "Kuhaybar": "خيبر",
-        "Layla": "ليلى",
-        "Lihyan": "ليحان",
-        "Lith": "الليث",
-        "Majarda": "المجاردة",
-        "MakkahAlMukarramah": "مكة المكرمة",
-        "Mandag": "مندق",
-        "MashaAlHadeed": "مشاع الحديد",
-        "Mashar": "مشار",
-        "Mecca": "مكة",
-        "Midinhab": "مذنب",
-        "Mizab": "ميزاب",
-        "Mubadala": "مبادلة",
-        "Mulayjah": "مليجة",
-        "Muna": "منى",
-        "Munifah": "منيفة",
-        "Murayr": "مريّر",
-        "Muzahmiah": "المزاحمية",
-        "Najran": "نجران",
-        "Namas": "النماص",
-        "Nebyah": "نبيعة",
-        "Nimran": "نمران",
-        "Nisab": "نصاب",
-        "Nmaas": "النماص",
-        "Noa": "نوع",
-        "Nora": "نورة",
-        "Qaisomah": "القيصومة",
-        "QaryaAlOlya": "القرية العليا",
-        "Qassim": "القصيم",
-        "Qateef": "القطيف",
-        "Qayieen": "قَيّين",
-        "Qilwah": "قلوة",
-        "Qorayn": "قرين",
-        "Rabigh": "رابغ",
-        "Rafha": "رفحاء",
-        "Rafhaa": "رفحاء",
-        "Rahima": "رحيمة",
-        "Raniah": "رنية",
-        "Rass": "الرس",
-        "RawdatSudair": "روضة سدير",
-        "Rayn": "رَيْن",
-        "RejalAlmaa": "رجال ألمع",
-        "Rema": "رما",
-        "Reneiah": "رنية",
-        "Riyadh": "الرياض",
-        "RiyadhAlKhabra": "رياض الخبراء",
-        "RuwwatAlSawamie": "روات السوامي",
-        "Sabia": "صبياء",
-        "Sadous": "سدوس",
-        "Safwa": "صفوى",
-        "Saihat": "سيهات",
-        "Sakaka": "سكاكا",
-        "Samata": "صامطة",
-        "Samdah": "صمده",
-        "Samira": "سميرا",
-        "Saybah": "سيبه",
-        "Saylah": "سيلا",
-        "Sayyar": "سير",
-        "Shaqra": "شقراء",
-        "Sharawrah": "شرورة",
-        "Shuaibah": "الشعيبة",
-        "Siddique": "صديق",
-        "Sihat": "سيهات",
-        "Simran": "سمران",
-        "Sour": "صور",
-        "Sowair": "سوير",
-        "Tabarjal": "طبرجل",
-        "Tabuk": "تبوك",
-        "Tamaire": "تمير",
-        "Tamise": "تمييز",
-        "Tanumah": "تنومة",
-        "Tarif": "طريف",
-        "Tayma": "تيماء",
-        "Taymaayman": "تيمايمان",
-        "Thadig": "ثادق",
-        "Thadiq": "ثادق",
-        "Thumayt": "ثمّيت",
-        "Tiwal": "طوال",
-        "Turaif": "طريف",
-        "Ubhur": "أبحر",
-        "Udhailiyah": "أذيلية",
-        "Ula": "العلا",
-        "Umluj": "أملج",
-        "Uraidh": "الرياض",
-        "Uraijah": "عريجة",
-        "Uraiq": "عريق",
-        "Urwah": "عروة",
-        "Uyun": "العيون",
-        "Wadea": "وديعة",
-        "Waez": "واعظ",
-        "Waha": "واحة",
-        "Wajh": "الوجه",
-        "WadiAlDawaser": "وادي الدواسر",
-        "Yanbu": "ينبع",
-        "Yotmah": "يتما",
-        "Zabnah": "زبنة",
-        "Zalfi": "الزلفي",
-        "Zarf": "ظرف",
-        "Zulfi": "الزلفي",
+    "Jubail": "الجبيل",
+    "Kahlah": "كحلة",
+    "Kara": "كرا",
+    "KaraA": "كرا أ",
+    "Karboos": "كربوس",
+    "Khafji": "الخفجي",
+    "Khaibar": "خيبر",
+    "Khairan": "خيراً",
+    "Khamaseen": "الخمسين",
+    "KhamisMushait": "خميس مشيط",
+    "Kharj": "الخرج",
+    "Khasawyah": "الخصاوية",
+    "Khobar": "الخبر",
+    "Khodaria": "الخضرية",
+    "Khulais": "خليص",
+    "KingAbdullahEconomicCity": "مدينة الملك عبدالله الاقتصادية",
+    "Kuhaybar": "خيبر",
+    "Layla": "ليلى",
+    "Lihyan": "ليحان",
+    "Lith": "الليث",
+    "Majarda": "المجاردة",
+    "MakkahAlMukarramah": "مكة المكرمة",
+    "Mandag": "مندق",
+    "MashaAlHadeed": "مشاع الحديد",
+    "Mashar": "مشار",
+    "Mecca": "مكة",
+    "Midinhab": "مذنب",
+    "Mizab": "ميزاب",
+    "Mubadala": "مبادلة",
+    "Mulayjah": "مليجة",
+    "Muna": "منى",
+    "Munifah": "منيفة",
+    "Murayr": "مريّر",
+    "Muzahmiah": "المزاحمية",
+    "Najran": "نجران",
+    "Namas": "النماص",
+    "Nebyah": "نبيعة",
+    "Nimran": "نمران",
+    "Nisab": "نصاب",
+    "Nmaas": "النماص",
+    "Noa": "نوع",
+    "Nora": "نورة",
+    "Qaisomah": "القيصومة",
+    "QaryaAlOlya": "القرية العليا",
+    "Qassim": "القصيم",
+    "Qateef": "القطيف",
+    "Qayieen": "قَيّين",
+    "Qilwah": "قلوة",
+    "Qorayn": "قرين",
+    "Rabigh": "رابغ",
+    "Rafha": "رفحاء",
+    "Rafhaa": "رفحاء",
+    "Rahima": "رحيمة",
+    "Raniah": "رنية",
+    "Rass": "الرس",
+    "RawdatSudair": "روضة سدير",
+    "Rayn": "رَيْن",
+    "RejalAlmaa": "رجال ألمع",
+    "Rema": "رما",
+    "Reneiah": "رنية",
+    "Riyadh": "الرياض",
+    "RiyadhAlKhabra": "رياض الخبراء",
+    "RuwwatAlSawamie": "روات السوامي",
+    "Sabia": "صبياء",
+    "Sadous": "سدوس",
+    "Safwa": "صفوى",
+    "Saihat": "سيهات",
+    "Sakaka": "سكاكا",
+    "Samata": "صامطة",
+    "Samdah": "صمده",
+    "Samira": "سميرا",
+    "Saybah": "سيبه",
+    "Saylah": "سيلا",
+    "Sayyar": "سير",
+    "Shaqra": "شقراء",
+    "Sharawrah": "شرورة",
+    "Shuaibah": "الشعيبة",
+    "Siddique": "صديق",
+    "Sihat": "سيهات",
+    "Simran": "سمران",
+    "Sour": "صور",
+    "Sowair": "سوير",
+    "Tabarjal": "طبرجل",
+    "Tabuk": "تبوك",
+    "Tamaire": "تمير",
+    "Tamise": "تمييز",
+    "Tanumah": "تنومة",
+    "Tarif": "طريف",
+    "Tayma": "تيماء",
+    "Taymaayman": "تيمايمان",
+    "Thadig": "ثادق",
+    "Thadiq": "ثادق",
+    "Thumayt": "ثمّيت",
+    "Tiwal": "طوال",
+    "Turaif": "طريف",
+    "Ubhur": "أبحر",
+    "Udhailiyah": "أذيلية",
+    "Ula": "العلا",
+    "Umluj": "أملج",
+    "Uraidh": "الرياض",
+    "Uraijah": "عريجة",
+    "Uraiq": "عريق",
+    "Urwah": "عروة",
+    "Uyun": "العيون",
+    "Wadea": "وديعة",
+    "Waez": "واعظ",
+    "Waha": "واحة",
+    "Wajh": "الوجه",
+    "WadiAlDawaser": "وادي الدواسر",
+    "Yanbu": "ينبع",
+    "Yotmah": "يتما",
+    "Zabnah": "زبنة",
+    "Zalfi": "الزلفي",
+    "Zarf": "ظرف",
+    "Zulfi": "الزلفي",
 };
 
 
@@ -294,11 +295,45 @@ const bankNameMapping = {
 };
 
 
+const customStyles = {
+    container: (provided) => ({
+        ...provided,
+        direction: 'rtl', // Ensure text direction is RTL
+    }),
+    control: (provided) => ({
+        ...provided,
+        textAlign: 'right', // Align text to the right
+        padding: '0', // Remove default padding
+        border: '1px solid #ccc', // Border style
+        borderRadius: '0.375rem', // Border radius for rounded corners
+        boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.1)', // Optional: shadow for better visibility
+    }),
+    placeholder: (provided) => ({
+        ...provided,
+        textAlign: 'right', // Align placeholder text to the right
+        direction: 'rtl', // Right-to-left text direction
+    }),
+    singleValue: (provided) => ({
+        ...provided,
+        textAlign: 'right', // Align selected value text to the right
+        direction: 'rtl', // Right-to-left text direction
+    }),
+    dropdownIndicator: (provided) => ({
+        ...provided,
+        padding: '0', // Remove default padding
+    }),
+    indicatorSeparator: (provided) => ({
+        ...provided,
+        display: 'none', // Hide the indicator separator if needed
+    }),
+};
+
 
 export const RefundForm = () => {
-    const [ loading, setLoading ] = useState(false);
+    const [citiesOptions, setCitiesOptions] = useState([]);
+    const [loading, setLoading] = useState(false);
     const { t } = useTranslation();
-    const { totalPrice ,orderData, orderItems, setTotalPrice, setTotalQuantity } = useAuth();
+    const { totalPrice, orderData, orderItems, setTotalPrice, setTotalQuantity } = useAuth();
     const navigate = useNavigate();
 
     const paymentMethodIncludesTabbyOrTamara = orderData?.payment_method?.toLowerCase().includes('tabby') || orderData?.payment_method?.toLowerCase().includes('tamara');
@@ -341,6 +376,11 @@ export const RefundForm = () => {
                 city: getCityKey(orderData.Customer.city || ""),
             });
         }
+
+        setCitiesOptions(Object.keys(cities).map(key => ({
+            value: key,
+            label: cities[key]
+        })));
     }, [orderData]);
 
 
@@ -362,57 +402,59 @@ export const RefundForm = () => {
             email: orderData?.Customer?.email || "",
             productOpened: "",
             reason: "",
-            city: getCityKey(orderData?.Customer?.city || ""),
+            city: citiesOptions.find(option => option.value === getCityKey(orderData?.Customer?.city)) || "",
         },
         validationSchema,
         onSubmit: async (values) => {
             const returnItems = orderItems.map(item => {
-                return {product_id: item.Product.id,
-                    quantity: item.refund_quantity}
-                })
-                const payload = {
-                    payment_method: orderData?.payment_method,
-                    items: returnItems,
-                    refund_amount: totalPrice,
-                    city: values.city,
-                    reason: values.reason,
-                    condition: values.productOpened,
-                    first_name: values.firstName,
-                    last_name: values.secondName,
-                    family_name: values.familyName,
-                    email: values.email,
-                    bank_code: ''
+                return {
+                    product_id: item.Product.id,
+                    quantity: item.refund_quantity
                 }
-                
-                if(values.iban) {
-                    payload.iban = values.iban
-                    payload.bank_code = getBankKey(getBankName(formik.values.iban))
-                }
-                const token = localStorage.getItem('token');
-                
-                try {
-                    handleLoading(true)
-                    const response = await axios.post(
-                        'http://localhost:3000/api/v1/customer/refund-requests',
-                        payload,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                                'Content-Type': 'application/json'
-                            }
+            })
+            const payload = {
+                payment_method: orderData?.payment_method,
+                items: returnItems,
+                refund_amount: totalPrice,
+                city: values.city,
+                reason: values.reason,
+                condition: values.productOpened,
+                first_name: values.firstName,
+                last_name: values.secondName,
+                family_name: values.familyName,
+                email: values.email,
+                bank_code: ''
+            }
+
+            if (values.iban) {
+                payload.iban = values.iban
+                payload.bank_code = getBankKey(getBankName(formik.values.iban))
+            }
+            const token = localStorage.getItem('token');
+
+            try {
+                handleLoading(true)
+                const response = await axios.post(
+                    'http://localhost:3000/api/v1/customer/refund-requests',
+                    payload,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json'
                         }
-                    );
-                    handleLoading(false)
-                    if(response.data.uuid) {
-                        toast.success("successfully submitted the refund request")
-                        setTotalPrice(0);
-                        setTotalQuantity(0);
-                        setTimeout(() => {
-                            navigate(`/bank-info/confirmation/${response.data.uuid}`);
-                        }, 1000)
                     }
-                } catch ({ response }) {
-                    handleLoading(false)
+                );
+                handleLoading(false)
+                if (response.data.uuid) {
+                    toast.success("successfully submitted the refund request")
+                    setTotalPrice(0);
+                    setTotalQuantity(0);
+                    setTimeout(() => {
+                        navigate(`/bank-info/confirmation/${response.data.uuid}`);
+                    }, 1000)
+                }
+            } catch ({ response }) {
+                handleLoading(false)
                 toast.error(response.data.message)
             }
         },
@@ -420,6 +462,7 @@ export const RefundForm = () => {
 
     return (
         <div className="flex justify-center items-start mt-12 p-4">
+            <ToastContainer />
             <div className="w-full md:w-1/2 lg:w-1/3 bg-white p-6 rounded-lg shadow-lg">
                 <form onSubmit={formik.handleSubmit} className="space-y-5">
                     <div className="relative">
@@ -567,25 +610,18 @@ export const RefundForm = () => {
                         </div>
 
                         <div className="relative w-full md:w-4/5">
-                            <select
+                            <Select
                                 name="city"
-                                value={formik.values.city}
-                                onChange={formik.handleChange}
+                                options={citiesOptions}
+                                value={{label:formik.values.city, value: getCityKey(formik.values.city)}}
+                                onChange={(selectedOption) => {
+                                    formik.setFieldValue('city', selectedOption.value)
+                                }}
                                 onBlur={formik.handleBlur}
-                                className="form-select w-full text-right appearance-none placeholder-right pr-10 py-2"
-                            >
-                                <option value="" disabled>
-                                    {t("select-city")}
-                                </option>
-                                {Object.entries(cities).map(([key, city]) => (
-                                    <option key={key} value={city}>
-                                        {city}
-                                    </option>
-                                ))}
-                            </select>
-                            <div className="absolute inset-y-0 left-0 flex items-center px-2 pointer-events-none">
-                                <FaChevronDown className="text-gray-400" />
-                            </div>
+                                placeholder={t("select-city")}
+                                isClearable={false}
+                                styles={customStyles}
+                            />
                             {formik.touched.city && formik.errors.city ? (
                                 <div className="text-red-500 text-sm mt-1 text-right">
                                     {formik.errors.city}
