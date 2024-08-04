@@ -9,7 +9,7 @@
         "verificationCodeRequired": "Verification code is required",
         "enterVerificationCode": "Enter Verification Code",
         "refundRequestConfirmed": "Your refund request has been successfully confirmed",
-        "orderId": "#order_id :order number",
+        "orderId": "#{{ order_id }}:order number",
         "contactNumber": "+966920029219",
         "technicalSupport": "Technical Support",
         "fillBankDetails": "Fill in the bank details",

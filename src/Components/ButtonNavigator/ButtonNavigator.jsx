@@ -34,7 +34,7 @@ export const ButtonNavigator = ({ backLocation }) => {
 
     const shippingCost = parseFloat(orderData?.shipping_cost) || 0;
     const cashOnDelivery = parseFloat(orderData?.cash_on_delivery) || 0;
-    const refundFee = 19;
+    const refundFee = -19;
 
     const finalTotalPrice = (totals.priceSum + totals.taxSum - totals.discountSum + shippingCost + cashOnDelivery + refundFee).toFixed(2);
 
@@ -92,7 +92,7 @@ export const ButtonNavigator = ({ backLocation }) => {
             <DetailRow label="Discount:" value={`-${totalDiscount}`} />
             <DetailRow label="Shipping Cost:" value={orderData?.shipping_cost} />
             <DetailRow label="Cash On Delivery:" value={orderData?.cash_on_delivery} />
-            <DetailRow label="Refund Fee:" value="19.00" isBold />
+            <DetailRow label="Refund Fee:" value="-19.00" isBold />
             <DetailRow label="Total:" value={totalAmount} isBold borderTop />
           </div>
         </div>

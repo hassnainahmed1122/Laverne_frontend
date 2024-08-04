@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { FaChevronDown } from "react-icons/fa";
@@ -312,7 +312,9 @@ const bankNameMapping = {
 };
 
 
+
 export const RefundForm = () => {
+    const [ loading, setLoading ] = useState(false);
     const { t } = useTranslation();
     const { totalPrice ,orderData, orderItems, setTotalPrice, setTotalQuantity } = useAuth();
     const navigate = useNavigate();
@@ -343,6 +345,9 @@ export const RefundForm = () => {
         reason: Yup.string().required(t("reason-required")),
         city: Yup.string().required(t("city-required")),
     });
+
+
+    const handleLoading = (value) => setLoading(value)
 
     const formik = useFormik({
         initialValues: {
@@ -380,6 +385,7 @@ export const RefundForm = () => {
                 const token = localStorage.getItem('token');
                 
                 try {
+                    handleLoading(true)
                     const response = await axios.post(
                         'http://localhost:3000/api/v1/customer/refund-requests',
                         payload,
@@ -390,15 +396,17 @@ export const RefundForm = () => {
                             }
                         }
                     );
+                    handleLoading(false)
                     if(response.data.uuid) {
                         toast.success("successfully submitted the refund request")
                         setTotalPrice(0);
                         setTotalQuantity(0);
                         setTimeout(() => {
-                            navigate("/bank-info/confirmation");
+                            navigate(`/bank-info/confirmation/${response.data.uuid}`);
                         }, 1000)
                     }
                 } catch ({ response }) {
+                    handleLoading(false)
                 toast.error(response.data.message)
             }
         },
@@ -582,6 +590,7 @@ export const RefundForm = () => {
 
                     <div className="text-left mt-6">
                         <button
+                            disabled={loading}
                             type="submit"
                             className="bg-black text-white py-2 px-4 rounded"
                         >

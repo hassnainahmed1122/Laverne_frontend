@@ -26,7 +26,7 @@ function App(props) {
             <Route path="/product-list" element={<PrivateRoute element={RefundPage} />} />
             <Route path="/product-list/details" element={<PrivateRoute element={RefundDetailsPage} />} />
             <Route path="/bank-info" element={<PrivateRoute element={BankInfoPage} />} />
-            <Route path="/bank-info/confirmation" element={<PrivateRoute element={BankInfoConfirmationPage} />} />
+            <Route path="/bank-info/confirmation/:id" element={<PrivateRoute element={BankInfoConfirmationPage} />} />
             <Route path="*" element={<Navigate to="/login" />} />
           </Routes>
         </Layout>

@@ -2,7 +2,7 @@ import React from 'react';
 import { FaWhatsapp, FaHeadphonesAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 
-export const BankInfoConfirmation = () => {
+export const BankInfoConfirmation = ({id}) => {
   const { t } = useTranslation();
 
   return (
@@ -15,7 +15,7 @@ export const BankInfoConfirmation = () => {
       
       <div className="p-6">
         <div className="border border-gray-300 p-4 text-center rounded-md">
-          <p className="text-lg font-medium">{t('orderId')}</p>
+          <p className="text-lg font-medium">{t('orderId', {order_id: id})}</p>
         </div>
       </div>
 
