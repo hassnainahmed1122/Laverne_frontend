@@ -7,7 +7,7 @@ import { useAuth } from "../../Context/AuthContext";
 import { useTranslation } from 'react-i18next';
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-import Select from 'react-select'; 
+import Select from 'react-select';
 
 const cities = {
     "AbaAlworood": "أباء الورد",
@@ -441,7 +441,7 @@ export const RefundForm = () => {
                 payload.bank_code = getBankKey(getBankName(formik.values.iban))
             }
             const token = localStorage.getItem('token');
-            
+
             try {
                 handleLoading(true)
                 const response = await axios.post(
@@ -516,7 +516,9 @@ export const RefundForm = () => {
                                 name="iban"
                                 value={formik.values.iban}
                                 onChange={(e) => {
-                                    formik.setFieldValue('iban', e.target.value.replace(/-/g, ''));
+                                    // Remove both hyphens and spaces
+                                    const cleanedValue = e.target.value.replace(/[-\s]/g, '');
+                                    formik.setFieldValue('iban', cleanedValue);
                                 }}
                                 onBlur={formik.handleBlur}
                                 className="form-input w-full text-right placeholder-right border border-gray-300 p-2"
@@ -608,7 +610,7 @@ export const RefundForm = () => {
                             <Select
                                 name="city"
                                 options={citiesOptions}
-                                value={{label:formik.values.city, value: getCityKey(formik.values.city)}}
+                                value={{ label: formik.values.city, value: getCityKey(formik.values.city) }}
                                 onChange={(selectedOption) => {
                                     formik.setFieldValue('city', selectedOption.value)
                                 }}
