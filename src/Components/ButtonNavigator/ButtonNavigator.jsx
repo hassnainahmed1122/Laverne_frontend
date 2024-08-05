@@ -16,14 +16,14 @@ export const ButtonNavigator = ({ backLocation }) => {
   const isBankInfoPage = location.pathname.includes('/bank-info');
 
   // Calculate totals using useMemo
-  const { totalAmount, totalTax, totalDiscount, orderTax } = useMemo(() => {
-    const initialValues = { priceSum: 0, taxSum: 0, discountSum: 0, };
+  const { totalAmount, orderTax, totalAmountWithTax, totalDiscount } = useMemo(() => {
+    const initialValues = { priceSum: 0, taxSum: 0, discountSum: 0, totalAmountWithTax: 0 };
 
     const totals = orderItems.reduce((acc, item) => {
-      const quantity = parseFloat(item.refund_quantity);
-      const price = parseFloat(item.Product.price);
-      const tax = parseFloat(item.Product.tax);
-      const discount = parseFloat(item.Product.discount);
+      const quantity = parseFloat(item?.refund_quantity);
+      const price = parseFloat(item?.Product?.price);
+      const tax = parseFloat(item?.Product?.tax);
+      const discount = parseFloat(item?.Product?.discount);
 
       acc.priceSum += price * quantity;
       acc.taxSum += tax * quantity;
@@ -34,11 +34,12 @@ export const ButtonNavigator = ({ backLocation }) => {
     const shippingCost = parseFloat(orderData?.shipping_cost) || 0;
     const cashOnDelivery = parseFloat(orderData?.cash_on_delivery) || 0;
     const otherCostTax = (parseFloat(orderData?.tax_percentage) / 100) * (shippingCost + cashOnDelivery)
-    const refundFee = 19;
-
-    const finalTotalPrice = (totals.priceSum + totals.taxSum - otherCostTax - totals.discountSum - shippingCost - cashOnDelivery - refundFee).toFixed(2);
-
+    const refundFee = 0;
+    const priceWithTax = (totals.priceSum + totals.taxSum + otherCostTax)
+    let finalTotalPrice = (priceWithTax - otherCostTax - totals.discountSum - shippingCost - cashOnDelivery - refundFee).toFixed(2);
+    finalTotalPrice = Math.max(finalTotalPrice, 0);
     return {
+      totalAmountWithTax: priceWithTax,
       totalDiscount: totals.discountSum.toFixed(2),
       totalAmount: finalTotalPrice,
       totalTax: (totals.taxSum).toFixed(2),
@@ -88,11 +89,12 @@ export const ButtonNavigator = ({ backLocation }) => {
         <div className="p-4">
           <h2 className="text-xl font-semibold mb-4">{t('receipt')}</h2>
           <div className="space-y-2">
-            <DetailRow label="Subtotal With Tax:" value={(parseFloat(orderData.sub_total) + parseFloat(totalTax) - parseFloat(totalDiscount)).toFixed(2)} />
-            <DetailRow label="Shipping And Cash On Delivery Tax:" value={`-${orderTax}`} />
-            <DetailRow label="Shipping Cost:" value={`-${orderData?.shipping_cost}`} />
-            <DetailRow label="Cash On Delivery:" value={`-${orderData?.cash_on_delivery}`} />
-            <DetailRow label="Refund Fee:" value="-19.00" isBold />
+            <DetailRow label="Subtotal With Tax:" value={(parseFloat(totalAmountWithTax).toFixed(2))} />
+            <DetailRow label="Shipping And Cash On Delivery Tax:" value={`${orderTax}`} />
+            <DetailRow label="Total Discount:" value={`${totalDiscount}`} />
+            <DetailRow label="Shipping Cost:" value={`${orderData?.shipping_cost}`} />
+            <DetailRow label="Cash On Delivery:" value={`${orderData?.cash_on_delivery}`} />
+            <DetailRow label="Refund Fee:" value="19.00" isBold />
             <DetailRow label="Total Refundable Amount:" value={totalAmount} isBold borderTop />
           </div>
         </div>

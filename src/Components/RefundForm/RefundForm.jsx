@@ -293,6 +293,18 @@ const bankNameMapping = {
     30: "البنك العربي",
     60: "بنك الجزيرة",
 };
+const bank_codes = {
+    '80': 'RHJI',
+    '20': 'RIBL',
+    '05': 'INMA',
+    '10': 'NCBK',
+    '55': 'BSFR',
+    '45': 'SABB',
+    '15': 'ALBI',
+    '65': 'SIBC',
+    '30': 'ARNB',
+    '60': 'BJAZ'
+}
 
 
 const customStyles = {
@@ -347,15 +359,15 @@ export const RefundForm = () => {
     };
 
     const ibanValidationSchema = Yup.string()
+        .transform(value => value.replace(/-/g, '')) // Removes dashes
         .matches(/^SA\d{22}$/, t('invalid-iban-format'))
         .required(t('iban-required'))
         .test("remove-spaces", t('iban-no-spaces'), (value) => !/\s/.test(value))
-        .transform(value => value.replace(/\s+/g, ''));
+        .transform(value => value.replace(/\s+/g, '')); // Removes spaces
 
     const validationSchema = Yup.object({
         firstName: Yup.string().required(t("first-name-required")),
         secondName: Yup.string().required(t("second-name-required")),
-        familyName: Yup.string().required(t("family-name-required")),
         iban: !paymentMethodIncludesTabbyOrTamara ? ibanValidationSchema : Yup.string(),
         email: Yup.string().email(t("invalid-email-format")).required(t("email-required")),
         productOpened: Yup.string().required(t("product-status-required")),
@@ -368,7 +380,6 @@ export const RefundForm = () => {
             formik.setValues({
                 firstName: orderData.Customer.first_name || "",
                 secondName: orderData.Customer.last_name || "",
-                familyName: "",
                 iban: "",
                 email: orderData.Customer.email || "",
                 productOpened: "",
@@ -391,13 +402,13 @@ export const RefundForm = () => {
     };
 
     const getBankKey = (bankValue) => {
-        return Object.keys(bankNameMapping).find(key => bankNameMapping[key] === bankValue)
+        const key = Object.keys(bankNameMapping).find(key => bankNameMapping[key] === bankValue)
+        return bank_codes[`${key}`]
     }
     const formik = useFormik({
         initialValues: {
             firstName: orderData?.Customer?.first_name || "",
             secondName: orderData?.Customer?.last_name || "",
-            familyName: "",
             iban: "",
             email: orderData?.Customer?.email || "",
             productOpened: "",
@@ -421,7 +432,6 @@ export const RefundForm = () => {
                 condition: values.productOpened,
                 first_name: values.firstName,
                 last_name: values.secondName,
-                family_name: values.familyName,
                 email: values.email,
                 bank_code: ''
             }
@@ -431,7 +441,7 @@ export const RefundForm = () => {
                 payload.bank_code = getBankKey(getBankName(formik.values.iban))
             }
             const token = localStorage.getItem('token');
-
+            
             try {
                 handleLoading(true)
                 const response = await axios.post(
@@ -499,30 +509,15 @@ export const RefundForm = () => {
                         ) : null}
                     </div>
 
-                    <div className="relative">
-                        <input
-                            type="text"
-                            name="familyName"
-                            value={formik.values.familyName}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            className="form-input w-full text-right placeholder-right border border-gray-300 p-2"
-                            placeholder={t("family-name")}
-                        />
-                        {formik.touched.familyName && formik.errors.familyName ? (
-                            <div className="text-red-500 text-sm mt-1 text-right">
-                                {formik.errors.familyName}
-                            </div>
-                        ) : null}
-                    </div>
-
                     {!paymentMethodIncludesTabbyOrTamara && (
                         <div className="relative">
                             <input
                                 type="text"
                                 name="iban"
                                 value={formik.values.iban}
-                                onChange={formik.handleChange}
+                                onChange={(e) => {
+                                    formik.setFieldValue('iban', e.target.value.replace(/-/g, ''));
+                                }}
                                 onBlur={formik.handleBlur}
                                 className="form-input w-full text-right placeholder-right border border-gray-300 p-2"
                                 placeholder={t("iban")}
