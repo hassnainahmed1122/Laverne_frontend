@@ -35,7 +35,7 @@ export const BankInfoConfirmationPage = () => {
             const data = await response.json();
             const updatedOrderItems = data.order.OrderItems.map(item => ({
                 ...item,
-                refund_quantity: item.quantity
+                refund_quantity: 0
             }));
 
             setOrderData(data.order);

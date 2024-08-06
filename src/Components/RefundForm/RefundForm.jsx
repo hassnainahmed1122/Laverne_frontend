@@ -370,7 +370,6 @@ export const RefundForm = () => {
         secondName: Yup.string().required(t("second-name-required")),
         iban: !paymentMethodIncludesTabbyOrTamara ? ibanValidationSchema : Yup.string(),
         email: Yup.string().email(t("invalid-email-format")).required(t("email-required")),
-        productOpened: Yup.string().required(t("product-status-required")),
         reason: Yup.string().required(t("reason-required")),
         city: Yup.string().required(t("city-required")),
     });
@@ -382,7 +381,6 @@ export const RefundForm = () => {
                 secondName: orderData.Customer.last_name || "",
                 iban: "",
                 email: orderData.Customer.email || "",
-                productOpened: "",
                 reason: "",
                 city: getCityKey(orderData.Customer.city || ""),
             });
@@ -411,25 +409,23 @@ export const RefundForm = () => {
             secondName: orderData?.Customer?.last_name || "",
             iban: "",
             email: orderData?.Customer?.email || "",
-            productOpened: "",
             reason: "",
             city: citiesOptions.find(option => option.value === getCityKey(orderData?.Customer?.city)) || "",
         },
         validationSchema,
         onSubmit: async (values) => {
-            const returnItems = orderItems.map(item => {
-                return {
-                    product_id: item.Product.id,
-                    quantity: item.refund_quantity
-                }
-            })
+            const returnItems = orderItems
+            .filter(item => item.refund_quantity > 0)
+            .map(item => ({
+                product_id: item.Product.id,
+                quantity: item.refund_quantity
+            }));
             const payload = {
                 payment_method: orderData?.payment_method,
                 items: returnItems,
                 refund_amount: totalPrice,
                 city: values.city,
                 reason: values.reason,
-                condition: values.productOpened,
                 first_name: values.firstName,
                 last_name: values.secondName,
                 email: values.email,
@@ -555,30 +551,6 @@ export const RefundForm = () => {
                     </div>
 
                     <div className="flex flex-col items-end space-y-4">
-                        <div className="relative w-full md:w-4/5">
-                            <select
-                                name="productOpened"
-                                value={formik.values.productOpened}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                className="form-select w-full text-right appearance-none placeholder-right pr-10 py-2"
-                            >
-                                <option value="" disabled>
-                                    {t("select-product-status")}
-                                </option>
-                                <option value="yes">{t("yes")}</option>
-                                <option value="no">{t("no")}</option>
-                            </select>
-                            <div className="absolute inset-y-0 left-0 flex items-center px-2 pointer-events-none">
-                                <FaChevronDown className="text-gray-400" />
-                            </div>
-                            {formik.touched.productOpened && formik.errors.productOpened ? (
-                                <div className="text-red-500 text-sm mt-1 text-right">
-                                    {formik.errors.productOpened}
-                                </div>
-                            ) : null}
-                        </div>
-
                         <div className="relative w-full md:w-4/5">
                             <select
                                 name="reason"

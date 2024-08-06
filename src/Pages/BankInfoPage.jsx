@@ -28,13 +28,8 @@ export const BankInfoPage = (props) => {
             }
 
             const data = await response.json();
-            const updatedOrderItems = data.order.OrderItems.map(item => ({
-                ...item,
-                refund_quantity: item.quantity
-            }));
 
             setOrderData(data.order);
-            setOrderItems(updatedOrderItems);
         } catch ({ response }) {
             toast.error(response.data.message + "logout")
             console.error('Failed to fetch order data:', response.data.message);
