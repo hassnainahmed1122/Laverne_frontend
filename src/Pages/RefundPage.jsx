@@ -6,9 +6,11 @@ import { useAuth } from '../Context/AuthContext';
 import { toast, ToastContainer } from 'react-toastify';
 import CustomerInfoWithLogout from '../Components/Customer/Customer';
 import { Footer } from '../Components/Footer/Footer';
+import { useTranslation } from 'react-i18next';
 
 export const RefundPage = () => {
     const [loading, setLoading] = useState(true);
+    const { t } = useTranslation();
     const { orderData, setOrderData, setOrderItems, logout } = useAuth();
     // Fetch order data
     const fetchOrderData = useCallback(async () => {
@@ -63,9 +65,9 @@ export const RefundPage = () => {
             {orderData ? (
                 <RequestCard key={orderData.id} orderData={orderData} />
             ) : (
-                <p className='w-100 flex justify-center'>No order data available.</p>
+                <p className='w-100 flex justify-center'>{t('noOrderData')}</p>
             )}
-            <Footer />
+            {/* <Footer /> */}
         </>
     );
 };

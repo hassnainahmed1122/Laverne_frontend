@@ -6,12 +6,14 @@ import CustomerInfoWithLogout from "../Components/Customer/Customer";
 import { useAuth } from "../Context/AuthContext";
 import React, { useCallback, useEffect } from "react";
 import { toast ,ToastContainer } from "react-toastify";
+import { useTranslation } from "react-i18next";
 import { Footer } from "../Components/Footer/Footer";
 
 
 export const BankInfoConfirmationPage = () => {
    const navigte = useNavigate();
    const { id } = useParams();
+   const {t} = useTranslation();
    const {  setOrderData, setOrderItems, logout } = useAuth();
     const fetchOrderData = useCallback(async () => {
         try {
@@ -60,11 +62,11 @@ export const BankInfoConfirmationPage = () => {
             <button className="w-1/5 flex items-center justify-center bg-black text-white px-2 py-4 rounded-full space-x-2"
                 onClick={() => navigte('/product-list')}
             >
-                <span className="text-center">Back to site</span>
+                <span className="text-center">{t('backToSite')}</span>
                 <MdOutlineKeyboardArrowRight className="text-white" />
             </button>
         </div>
-        <Footer />
+        {/* <Footer /> */}
     </>
    ) 
 }

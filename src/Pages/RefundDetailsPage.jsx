@@ -108,7 +108,7 @@ export const RefundDetailsPage = () => {
         ))
       )}
       <ButtonNavigator backLocation='/product-list' />
-      <Footer />
+      <div className='mb-10 mt-10'></div>
     </>
   );
 };

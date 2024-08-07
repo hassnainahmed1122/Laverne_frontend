@@ -44,11 +44,12 @@ export const OtpPage = () => {
           order_id: orderNumber,
         });
 
-        toast.success(response.data.message);
+        toast.success(t(response.data.message));
         setTokenAndAuthenticatedToTrue(response.data.token);
         setTimeout(() => navigate('/product-list'), 1000);
       } catch (error) {
-        toast.error(error.response?.data?.message || t('errorOccurred'));
+        console.log('testing................', error)
+        toast.error(t(error.response?.data?.message) || t('errorOccurred'));
       }
     }
   });
@@ -132,7 +133,7 @@ export const OtpPage = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

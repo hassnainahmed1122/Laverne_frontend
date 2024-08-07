@@ -89,13 +89,37 @@ export const ButtonNavigator = ({ backLocation }) => {
         <div className="p-4">
           <h2 className="text-xl font-semibold mb-4">{t('receipt')}</h2>
           <div className="space-y-2">
-            <DetailRow label="Subtotal With Tax:" value={(parseFloat(totalAmountWithTax).toFixed(2))} />
-            <DetailRow label="Shipping And Cash On Delivery Tax:" value={`${orderTax}`} />
-            <DetailRow label="Total Discount:" value={`${totalDiscount}`} />
-            <DetailRow label="Shipping Cost:" value={`${orderData?.shipping_cost}`} />
-            <DetailRow label="Cash On Delivery:" value={`${orderData?.cash_on_delivery}`} />
-            <DetailRow label="Refund Fee:" value="19.00" isBold />
-            <DetailRow label="Total Refundable Amount:" value={totalAmount} isBold borderTop />
+          <DetailRow
+        label={t('subtotalWithTax')}
+        value={parseFloat(totalAmountWithTax).toFixed(2)}
+      />
+      <DetailRow
+        label={t('shippingAndCashOnDeliveryTax')}
+        value={orderTax}
+      />
+      <DetailRow
+        label={t('totalDiscount')}
+        value={totalDiscount}
+      />
+      <DetailRow
+        label={t('shippingCost')}
+        value={orderData?.shipping_cost}
+      />
+      <DetailRow
+        label={t('cashOnDelivery')}
+        value={orderData?.cash_on_delivery}
+      />
+      <DetailRow
+        label={t('refundFee')}
+        value="19.00"
+        isBold
+      />
+      <DetailRow
+        label={t('totalRefundableAmount')}
+        value={totalAmount}
+        isBold
+        borderTop
+      />
           </div>
         </div>
       </Modal>

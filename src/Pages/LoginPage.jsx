@@ -11,15 +11,12 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth } from '../Context/AuthContext';
 
-const validationSchema = Yup.object({
-  mobileNumber: Yup.string()
-    .matches(/^5\d{8}$/, 'Invalid mobile number')
-    .required('Mobile number is required'),
-  orderNumber: Yup.string().required('Order number is required')
-});
 
-const LoginForm = ({ formik, loading }) => (
-  <form onSubmit={formik.handleSubmit} className="max-w-sm mx-auto">
+const LoginForm = ({ formik, loading }) => {
+  const { t } = useTranslation();
+  
+  return (
+    <form onSubmit={formik.handleSubmit} className="max-w-sm mx-auto">
     <div className="flex items-center mb-4">
       <button
         id="dropdown-phone-button"
@@ -27,7 +24,7 @@ const LoginForm = ({ formik, loading }) => (
         type="button"
         style={{ height: '50px', width: '150px' }}
         disabled={loading}
-      >
+        >
         <MdOutlineKeyboardArrowDown />
         <p className="px-2">+966</p>
         <img src={flagImage} alt="flag" className="h-6 w-6 ml-2" />
@@ -39,10 +36,10 @@ const LoginForm = ({ formik, loading }) => (
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         className="py-2.5 px-4 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-e-lg focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-700"
-        placeholder="Enter mobile number"
+        placeholder={t('enterMobileNumber')}
         style={{ height: '50px', width: '200px' }}
         disabled={loading}
-      />
+        />
     </div>
     {formik.touched.mobileNumber && formik.errors.mobileNumber && (
       <div className="text-red-500 text-sm mb-4">{formik.errors.mobileNumber}</div>
@@ -56,10 +53,10 @@ const LoginForm = ({ formik, loading }) => (
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         className="py-2.5 px-4 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-e-lg focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-700"
-        placeholder="Enter order number"
+        placeholder={t('enterOrderNumber')}
         style={{ height: '50px', width: '100%' }}
         disabled={loading}
-      />
+        />
     </div>
     {formik.touched.orderNumber && formik.errors.orderNumber && (
       <div className="text-red-500 text-sm mb-4">{formik.errors.orderNumber}</div>
@@ -71,12 +68,12 @@ const LoginForm = ({ formik, loading }) => (
       disabled={loading}
     >
       <div className="flex items-center justify-center">
-        <span>{loading ? 'Loading...' : 'Access'}</span>
+        <span>{loading ? t('loading') : t('access')}</span>
         <MdOutlineKeyboardArrowLeft />
       </div>
     </button>
   </form>
-);
+)};
 
 const MemoizedFooter = React.memo(Footer);
 
@@ -85,7 +82,13 @@ export const LoginPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
-
+  const validationSchema = Yup.object({
+    mobileNumber: Yup.string()
+      .matches(/^5\d{8}$/, t('invalidMobileNumber'))
+      .required(t('mobileNumberRequired')),
+    orderNumber: Yup.string().required(t('orderNumberRequired'))
+  });
+  
   const formik = useFormik({
     initialValues: {
       mobileNumber: '',
@@ -99,11 +102,11 @@ export const LoginPage = () => {
           phoneNumber: `+966${values.mobileNumber}`,
           order_number: values.orderNumber
         });
-        toast.success(response.data.message);
+        toast.success(t(response.data.message));
         login(response.data.orderId, `+966${values.mobileNumber}`);
         setTimeout(() => navigate('/otp'), 1000);
       } catch ({ response }) {
-        toast.error(response.data.message);
+        toast.error(t(response.data.message));
       } finally {
         setLoading(false);
       }
@@ -129,7 +132,7 @@ export const LoginPage = () => {
           </div>
         </div>
       </div>
-      <MemoizedFooter />
+      {/* <MemoizedFooter /> */}
     </>
   );
 };

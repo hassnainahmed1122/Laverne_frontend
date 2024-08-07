@@ -20,14 +20,14 @@ export const BankInfoConfirmation = ({id}) => {
       </div>
 
       <div className="flex items-center justify-between p-4 bg-gray-100">
-        <div className="flex items-center space-x-2">
+        {/* <div className="flex items-center space-x-2">
           <FaWhatsapp className="text-gray-500 text-xl" />
           <p className="text-gray-600">{t('contactNumber')}</p>
         </div>
         <div className="flex items-center space-x-2">
           <p className="text-gray-600">{t('technicalSupport')}</p>
           <FaHeadphonesAlt className="text-gray-600 text-xl" />
-        </div>
+        </div> */}
       </div>
     </div>
   );

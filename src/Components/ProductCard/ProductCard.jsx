@@ -40,7 +40,7 @@ export const ProductCard = ({ item, onIncrease, onDecrease }) => {
             <h2 className="text-lg font-semibold text-gray-800">{name}</h2>
             <span className="text-gray-600">{t('price', { price: itemPrice.toFixed(2) })}</span>
             <span className="text-gray-600">{t('tax', { price: taxAmount })}</span>
-            <span className="text-gray-600">{`TAX Percentage: ${item?.Product?.tax_percentage}%`}</span>
+            <span className="text-gray-600">{t('taxPercentage', {taxPercentage: item?.Product?.tax_percentage })}</span>
             <span className="text-gray-600">{t('discount', { price: totalDiscount.toFixed(2) })}</span>
             <span className="text-gray-600">{t('totalProductPrice', { price: totalPrice })}</span>
           </div>

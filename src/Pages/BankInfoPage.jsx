@@ -47,7 +47,8 @@ export const BankInfoPage = (props) => {
             <Navigator />
             <RefundForm />
             <ButtonNavigator backLocation={'/product-list/details'}/>
-            <Footer/>
+            <div className="mt-10 mb-10"></div>
+            {/* <Footer/> */}
         </>
     )
 }
